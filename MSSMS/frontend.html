@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mechara Secondary School – SMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #1a3c5e;
+      --secondary: #2563eb;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f97316;
+      --light: #f0f4ff;
+      --white: #fff;
+      --gray: #6b7280;
+      --dark: #111827;
+      --card-shadow: 0 10px 40px rgba(37, 99, 235, .12);
+      --radius: 16px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ╔═══ AUTH SCREENS ═══╗ */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #0f2540 0%, #1a3c5e 40%, #2563eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .auth-screen.hidden { display: none; }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, .3);
+      animation: cardUp .5s ease .15s both;
+    }
+    @keyframes cardUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .auth-title { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .auth-sub { font-size: 13px; color: var(--gray); margin-bottom: 32px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 7px; }
+    .form-control {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all .25s;
+    }
+    .form-control:focus { border-color: var(--secondary); background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, .1); }
+    .form-control.error { border-color: var(--danger); }
+    .form-error { font-size: 11px; color: var(--danger); margin-top: 5px; display: none; }
+    .form-error.show { display: block; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all .2s;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; }
+    .btn-primary:hover { box-shadow: 0 8px 28px rgba(37, 99, 235, .45); transform: translateY(-2px); }
+    .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: #fff; }
+    .btn.loading { opacity: .6; cursor: not-allowed; }
+
+    /* ╔═══ DEMO BUTTONS ═══╗ */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .demo-btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      background: #f9fafb;
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+    }
+    .demo-btn:hover { border-color: var(--secondary); background: #eff6ff; }
+    .demo-role { font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .demo-cred { font-size: 11px; color: var(--gray); }
+
+    /* ╔═══ SIDEBAR ═══╗ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(160deg, #1a3c5e 0%, #0f2540 100%);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      transition: width .3s ease;
+      overflow: hidden;
+    }
+    .sidebar.collapsed { width: 72px; }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+    .sidebar-logo .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--dark);
+      flex-shrink: 0;
+    }
+    .sidebar-logo .logo-text { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.4; }
+    .sidebar-logo .logo-text span { color: var(--accent); display: block; font-size: 10px; font-weight: 400; }
+    .sidebar nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+    .nav-section { padding: 8px 20px 4px; font-size: 10px; font-weight: 600; color: rgba(255, 255, 255, .35); letter-spacing: 1px; text-transform: uppercase; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 20px;
+      color: rgba(255, 255, 255, .7);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+    }
+    .nav-item:hover { background: rgba(255, 255, 255, .07); color: #fff; }
+    .nav-item.active { background: rgba(37, 99, 235, .25); color: #fff; border-left-color: var(--accent); }
+    .nav-item i { font-size: 18px; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item span { font-size: 13px; font-weight: 500; }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+    }
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .user-info { overflow: hidden; }
+    .user-info .uname { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .user-info .urole { color: rgba(255, 255, 255, .5); font-size: 11px; white-space: nowrap; }
+
+    /* ╔═══ MAIN LAYOUT ═══╗ */
+    .main {
+      margin-left: 260px;
+      flex: 1;
+      transition: margin-left .3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      background: #fff;
+      padding: 0 28px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .toggle-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: none;
+      background: var(--light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary);
+      transition: background .2s;
+    }
+    .toggle-btn:hover { background: #dbeafe; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    .role-badge.Administrator { background: #dbeafe; color: #1d4ed8; }
+    .role-badge.Teacher { background: #d1fae5; color: #065f46; }
+    .role-badge.Registrar { background: #fef3c7; color: #92400e; }
+    .role-badge.Finance { background: #ede9fe; color: #5b21b6; }
+    .role-badge.Student { background: #fee2e2; color: #991b1b; }
+
+    /* ╔═══ CONTENT ═══╗ */
+    .content {
+      flex: 1;
+      padding: 28px;
+    }
+    .page {
+      display: none;
+      animation: fadeIn .35s ease;
+    }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-title { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .card-subtitle { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+    /* ╔═══ STATUS BADGES ═══╗ */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-status.approved { background: #d1fae5; color: #059669; }
+    .badge-status.pending { background: #fef3c7; color: #d97706; }
+    .badge-status.rejected { background: #fee2e2; color: #dc2626; }
+
+    /* ╔═══ TABLES ═══╗ */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead tr { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+    thead th {
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f3f4f6; transition: background .15s; }
+    tbody tr:hover { background: #f8faff; }
+    tbody td { padding: 13px 16px; font-size: 13px; color: var(--dark); vertical-align: middle; }
+
+    /* ╔═══ STATS GRID ═══╗ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .stat-card:hover { transform: translateY(-4px); }
+    .stat-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .stat-icon.blue { background: #dbeafe; color: #2563eb; }
+    .stat-icon.green { background: #d1fae5; color: #10b981; }
+    .stat-icon.orange { background: #ffedd5; color: #f97316; }
+    .stat-info .label { font-size: 12px; color: var(--gray); font-weight: 500; }
+    .stat-info .value { font-size: 26px; font-weight: 800; color: var(--dark); line-height: 1.2; }
+
+    /* ╔═══ FORMS ═══╗ */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .form-group.full { grid-column: 1/-1; }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+    select.form-control { cursor: pointer; }
+
+    /* ╔═══ MODAL ═══╗ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px;
+      width: 90%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(.9);
+      transition: transform .3s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: none;
+      background: var(--light);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--gray);
+    }
+
+    /* ╔═══ ALERTS ═══╗ */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .alert.warning {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      color: #92400e;
+    }
+    .alert.danger {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      color: #991b1b;
+    }
+    .alert.success {
+      background: #d1fae5;
+      border-left: 4px solid #10b981;
+      color: #065f46;
+    }
+
+    /* ╔═══ TOAST ═══╗ */
+    .toast-container {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+    }
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+      animation: slideIn .3s ease;
+      min-width: 280px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .toast.success { background: #fff; border-left: 4px solid var(--success); color: var(--dark); }
+    .toast.error { background: #fff; border-left: 4px solid var(--danger); color: var(--dark); }
+    .toast.info { background: #fff; border-left: 4px solid var(--secondary); color: var(--dark); }
+    @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ╔═══ RESPONSIVE ═══╗ */
+    @media (max-width: 768px) {
+      .sidebar { width: 72px; }
+      .main { margin-left: 72px; }
+      .sidebar-logo .logo-text { display: none; }
+      .nav-item span { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-grid { grid-template-columns: 1fr; }
+      .content { padding: 16px; }
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" class="auth-screen" style="background: linear-gradient(135deg, #0f2540, #2563eb);">
+  <div style="text-align: center;">
+    <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 44px;"><i class="fas fa-graduation-cap"></i></div>
+    <div style="font-family: Poppins; font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;">Mechara SMS</div>
+    <div style="font-size: 13px; color: rgba(255,255,255,.7);">Loading...</div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-title">Sign In</div>
+    <div class="auth-sub">Choose your role and sign in with demo credentials</div>
+
+    <div class="demo-grid">
+      <button class="demo-btn" onclick="fillLogin('admin','admin123')"><div class="demo-role">👮 Admin</div><div class="demo-cred">admin / admin123</div></button>
+      <button class="demo-btn" onclick="fillLogin('teacher','teacher123')"><div class="demo-role">👩‍🏫 Teacher</div><div class="demo-cred">teacher / teacher123</div></button>
+      <button class="demo-btn" onclick="fillLogin('registrar','reg123')"><div class="demo-role">📋 Registrar</div><div class="demo-cred">registrar / reg123</div></button>
+      <button class="demo-btn" onclick="fillLogin('finance','fin123')"><div class="demo-role">💰 Finance</div><div class="demo-cred">finance / fin123</div></button>
+    </div>
+
+    <form onsubmit="handleLogin(event)" novalidate>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control" id="loginUser" placeholder="username"/>
+        <div class="form-error" id="userErr">Username is required</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" id="loginPass" placeholder="password"/>
+        <div class="form-error" id="passErr">Password is required</div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--gray);">
+      <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-size: 12px; text-decoration: underline;" onclick="switchPage('studentRegister')">Student Self-Registration</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT REGISTRATION PAGE -->
+<div id="studentRegisterPage" class="auth-screen" style="display: none;">
+  <div class="auth-card">
+    <div class="auth-title">Register as Student</div>
+    <div class="auth-sub">Create your account and wait for admin approval</div>
+
+    <form onsubmit="handleStudentRegister(event)" novalidate>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" class="form-control" id="regName" placeholder="Your full name"/>
+        <div class="form-error" id="nameErr">Name is required</div>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" class="form-control" id="regEmail" placeholder="your@email.com"/>
+        <div class="form-error" id="emailErr">Valid email is required</div>
+      </div>
+      <div class="form-group">
+        <label>Username *</label>
+        <input type="text" class="form-control" id="regUsername" placeholder="username"/>
+        <div class="form-error" id="regUserErr">Username required (and must be unique)</div>
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" class="form-control" id="regPassword" placeholder="Min 6 characters"/>
+        <div class="form-error" id="passRegErr">Password must be at least 6 characters</div>
+      </div>
+      <div class="form-group">
+        <label>Guardian Phone *</label>
+        <input type="tel" class="form-control" id="regPhone" placeholder="+251 9XX XXX XXX"/>
+        <div class="form-error" id="phoneErr">Phone is required</div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="regBtn">Request Registration</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-size: 12px; text-decoration: underline;" onclick="switchPage('login')">Back to Sign In</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+    <div class="logo-text">Mechara SS<span>Management System</span></div>
+  </div>
+  <nav id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarAvatar">A</div>
+      <div class="user-info">
+        <div class="uname" id="sidebarName">User</div>
+        <div class="urole" id="sidebarRole">Role</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main" id="main" style="display: none;">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <span class="role-badge" id="topbarRoleBadge">Administrator</span>
+      <button class="btn" style="background: none; border: none; color: var(--danger); padding: 8px 12px; font-size: 14px;" onclick="logout()" title="Sign Out"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius); padding: 32px; color: #fff; margin-bottom: 24px;">
+        <div style="font-size: 22px; font-weight: 800; margin-bottom: 6px;"><i class="fas fa-graduation-cap"></i> Welcome to Mechara Secondary School</div>
+        <div style="font-size: 13px; opacity: .8;" id="dashboardSubtitle">Management Information System</div>
+      </div>
+      <div class="stats-grid" id="dashStats"></div>
+    </div>
+
+    <!-- STUDENT APPROVAL (Admin only) -->
+    <div class="page" id="page-approvals">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-check-circle"></i> Student Registration Approvals</div>
+            <div class="card-subtitle">Review and approve pending student registrations</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="approvalsTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="approvalsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENTS (Registrar - manage, Admin - view all) -->
+    <div class="page" id="page-students">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-users"></i> Students</div>
+            <div class="card-subtitle" id="studentCountSub">Total: 0 students</div>
+          </div>
+          <button class="btn btn-primary" id="addStudentBtn" style="width: auto; justify-content: center;" onclick="openAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="table-wrap">
+          <table id="studentsTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Grade</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEACHER: MY CLASS STUDENTS -->
+    <div class="page" id="page-mystudents">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-graduation-cap"></i> My Class Students</div>
+            <div class="card-subtitle" id="myStudentsCountSub">Students in your class</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="myStudentsTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+                <th>Guardian</th>
+              </tr>
+            </thead>
+            <tbody id="myStudentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE (Teacher & Admin) -->
+    <div class="page" id="page-attendance">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-clipboard-check"></i> Attendance</div>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <select class="form-control" id="attGrade" style="width: auto; min-width: 160px;" onchange="loadAttendance()">
+              <option value="">Select Class</option>
+            </select>
+            <input type="date" class="form-control" id="attDate" style="width: auto; min-width: 140px;"/>
+            <button class="btn btn-primary" style="width: auto;" onclick="saveAttendance()"><i class="fas fa-save"></i> Save</button>
+          </div>
+        </div>
+        <div id="attendanceContent"></div>
+      </div>
+    </div>
+
+    <!-- GRADES (Teacher & Admin) -->
+    <div class="page" id="page-grades">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-chart-bar"></i> Grades</div>
+          </div>
+          <select class="form-control" id="gradeClass" style="width: auto; min-width: 160px;" onchange="loadGrades()">
+            <option value="">Select Class</option>
+          </select>
+        </div>
+        <div id="gradesContent"></div>
+      </div>
+    </div>
+
+    <!-- FEES (Finance & Admin) -->
+    <div class="page" id="page-fees">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-info"><div class="label">Total Collected</div><div class="value" id="totalFees">ETB 0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-users"></i></div>
+          <div class="stat-info"><div class="label">Students Paid</div><div class="value" id="studentsPaid">0</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-money-bill-wave"></i> Fee Records</div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openFeeModal()"><i class="fas fa-plus"></i> Record Payment</button>
+        </div>
+        <div class="table-wrap">
+          <table id="feesTable">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody id="feesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS / PROFILE -->
+    <div class="page" id="page-settings">
+      <div class="card" style="max-width: 520px;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group"><label>Full Name</label><input type="text" class="form-control" id="profileName" readonly/></div>
+          <div class="form-group"><label>Role</label><input type="text" class="form-control" id="profileRole" readonly/></div>
+          <div class="form-group"><label>Email</label><input type="email" class="form-control" id="profileEmail"/></div>
+          <div class="form-group"><label>Phone</label><input type="tel" class="form-control" id="profilePhone"/></div>
+        </div>
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+          <button class="btn btn-primary" style="flex: 1;" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button>
+          <button class="btn btn-danger" style="flex: 1;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- USER MANAGEMENT (Admin only) -->
+    <div class="page" id="page-users">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-users-cog"></i> User Management</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add Staff</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;" id="usersGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEE MODAL -->
+<div class="modal-overlay" id="feeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-money-bill-wave"></i> Record Fee Payment</div>
+      <button class="modal-close" onclick="closeModal('feeModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Student ID</label><input type="text" class="form-control" id="feeStudentId"/></div>
+      <div class="form-group"><label>Amount (ETB)</label><input type="number" class="form-control" id="feeAmount" min="0" step="0.01"/></div>
+      <div class="form-group"><label>Payment Date</label><input type="date" class="form-control" id="feeDate"/></div>
+      <div class="form-group full"><label>Notes</label><textarea class="form-control" id="feeNotes"></textarea></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveFee()"><i class="fas fa-check"></i> Save Payment</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('feeModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STUDENT MODAL (Registrar) -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-user-plus"></i> Add Student</div>
+      <button class="modal-close" onclick="closeModal('addStudentModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name *</label><input type="text" class="form-control" id="addStudName" placeholder="Student's full name"/></div>
+      <div class="form-group"><label>Grade *</label><select class="form-control" id="addStudGrade"><option value="">-- Select Grade --</option></select></div>
+      <div class="form-group"><label>Guardian Name</label><input type="text" class="form-control" id="addStudGuardian" placeholder="Guardian's name"/></div>
+      <div class="form-group"><label>Guardian Phone</label><input type="tel" class="form-control" id="addStudPhone" placeholder="+251 9XX XXX XXX"/></div>
+      <div class="form-group"><label>Email</label><input type="email" class="form-control" id="addStudEmail" placeholder="student@email.com"/></div>
+      <div class="form-group"><label>Date of Birth</label><input type="date" class="form-control" id="addStudDOB"/></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveStudent()"><i class="fas fa-check"></i> Add Student</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('addStudentModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD USER MODAL (Admin) -->
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-user-plus"></i> Add Staff User</div>
+      <button class="modal-close" onclick="closeModal('addUserModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name *</label><input type="text" class="form-control" id="newUserName"/></div>
+      <div class="form-group"><label>Role *</label><select class="form-control" id="newUserRole"><option value="">-- Select --</option><option>Teacher</option><option>Registrar</option><option>Finance</option></select></div>
+      <div class="form-group"><label>Username *</label><input type="text" class="form-control" id="newUserUsername"/></div>
+      <div class="form-group"><label>Password *</label><input type="password" class="form-control" id="newUserPassword" placeholder="Min 6 characters"/></div>
+      <div class="form-group"><label>Email</label><input type="email" class="form-control" id="newUserEmail"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" class="form-control" id="newUserPhone"/></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="addUser()"><i class="fas fa-check"></i> Create User</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('addUserModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║           ROLE DEFINITIONS & PRIVILEGE MATRIX                      ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+/**
+ * ADMINISTRATOR:
+ *   - Full system access, create/edit/delete users
+ *   - View and approve student registrations
+ *   - View all students, attendance, grades, fees
+ *   - Generate reports
+ *   - System settings
+ *
+ * TEACHER:
+ *   - View only: own class students
+ *   - Can: take attendance (own class), enter grades (own class)
+ *   - Cannot: manage students, manage users, manage fees
+ *   - Limited reports: own class only
+ *
+ * REGISTRAR:
+ *   - Can: register new students (submit for approval)
+ *   - Can: manage student records
+ *   - View: class structure
+ *   - Cannot: take attendance, enter grades, manage fees, manage users
+ *
+ * FINANCE:
+ *   - Can ONLY: record fee payments, view fee reports
+ *   - Cannot: manage students, attendance, grades, users
+ *
+ * STUDENT:
+ *   - Limited to personal portal (after admin approval)
+ *   - View: own grades, attendance, fee status
+ *   - Cannot: access anything else
+ */
+
+const ROLES = {
+  admin: { name: 'Administrator', pages: ['dashboard', 'approvals', 'students', 'attendance', 'grades', 'fees', 'users', 'settings'] },
+  teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'settings'] },
+  registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
+  finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
+  student: { name: 'Student', pages: ['dashboard', 'settings'] },
+};
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                      DATA MANAGEMENT                               ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function lsGet(key, def = []) { return JSON.parse(localStorage.getItem(key) || JSON.stringify(def)); }
+function lsSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+function ssGet(key, def = null) { return JSON.parse(sessionStorage.getItem(key) || JSON.stringify(def)); }
+function ssSet(key, val) { sessionStorage.setItem(key, JSON.stringify(val)); }
+
+let users = lsGet('mssms_users', [
+  { username: 'admin', password: 'admin123', role: 'admin', name: 'Admin User', email: 'admin@school.edu', phone: '' },
+  { username: 'teacher', password: 'teacher123', role: 'teacher', name: 'Demo Teacher', email: 'teacher@school.edu', phone: '' },
+  { username: 'registrar', password: 'reg123', role: 'registrar', name: 'Registrar', email: 'reg@school.edu', phone: '' },
+  { username: 'finance', password: 'fin123', role: 'finance', name: 'Finance', email: 'fin@school.edu', phone: '' },
+]);
+
+let students = lsGet('mssms_students', []);
+let pendingStudents = lsGet('mssms_pending', []);  // Students awaiting admin approval
+let fees = lsGet('mssms_fees', []);
+let attendance = lsGet('mssms_attendance', {});
+let grades = lsGet('mssms_grades', {});
+
+let currentUser = ssGet('user', null);
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                        BOOT SEQUENCE                               ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+window.addEventListener('load', function() {
+  if (currentUser) {
+    renderApp();
+  } else {
+    showPage('login');
+  }
+  document.getElementById('splash').classList.add('hide');
+});
+
+function showPage(page) {
+  document.getElementById('loginPage').style.display = page === 'login' ? 'flex' : 'none';
+  document.getElementById('studentRegisterPage').style.display = page === 'studentRegister' ? 'flex' : 'none';
+  document.getElementById('main').style.display = page !== 'login' && page !== 'studentRegister' ? 'flex' : 'none';
+}
+
+function switchPage(page) {
+  showPage(page);
+}
+
+function renderApp() {
+  showPage('app');
+  document.getElementById('sidebarName').textContent = currentUser.name;
+  document.getElementById('sidebarRole').textContent = ROLES[currentUser.role].name;
+  document.getElementById('sidebarAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('topbarRoleBadge').textContent = ROLES[currentUser.role].name;
+  document.getElementById('topbarRoleBadge').className = `role-badge ${currentUser.role}`;
+  buildNav();
+  showDashboard();
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                    NAVIGATION & ACCESS CONTROL                     ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function buildNav() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  const pages = ROLES[currentUser.role].pages;
+
+  const items = [
+    { id: 'dashboard', icon: 'fa-chart-line', label: 'Dashboard' },
+    { id: 'approvals', icon: 'fa-check-circle', label: 'Student Approvals', role: ['admin'] },
+    { id: 'students', icon: 'fa-users', label: 'Students', role: ['admin', 'registrar'] },
+    { id: 'mystudents', icon: 'fa-graduation-cap', label: 'My Class', role: ['teacher'] },
+    { id: 'attendance', icon: 'fa-clipboard-check', label: 'Attendance', role: ['admin', 'teacher'] },
+    { id: 'grades', icon: 'fa-chart-bar', label: 'Grades', role: ['admin', 'teacher'] },
+    { id: 'fees', icon: 'fa-money-bill-wave', label: 'Fees', role: ['admin', 'finance'] },
+    { id: 'users', icon: 'fa-users-cog', label: 'Users', role: ['admin'] },
+    { id: 'settings', icon: 'fa-cog', label: 'Settings', role: ['admin', 'teacher', 'registrar', 'finance'] },
+  ];
+
+  items.forEach(item => {
+    if (!pages.includes(item.id)) return;
+    if (item.role && !item.role.includes(currentUser.role)) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'nav-item';
+    sec.innerHTML = `<i class="fas ${item.icon}"></i><span>${item.label}</span>`;
+    sec.onclick = () => navigateTo(item.id);
+    nav.appendChild(sec);
+  });
+}
+
+function navigateTo(pageId) {
+  const pages = ROLES[currentUser.role].pages;
+  if (!pages.includes(pageId)) { toast('Access Denied', 'error'); return; }
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + pageId);
+  if (page) {
+    page.classList.add('active');
+    document.getElementById('pageTitle').textContent = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+  }
+
+  if (pageId === 'approvals') loadApprovals();
+  if (pageId === 'students') loadStudents();
+  if (pageId === 'mystudents') loadMyStudents();
+  if (pageId === 'attendance') loadAttendance();
+  if (pageId === 'grades') loadGrades();
+  if (pageId === 'fees') loadFees();
+  if (pageId === 'users') loadUsers();
+  if (pageId === 'settings') loadSettings();
+  if (pageId === 'dashboard') showDashboard();
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                       AUTHENTICATION                               ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function fillLogin(user, pass) {
+  document.getElementById('loginUser').value = user;
+  document.getElementById('loginPass').value = pass;
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+
+  if (!user) { showErr('userErr'); return; }
+  if (!pass) { showErr('passErr'); return; }
+
+  const found = users.find(u => u.username === user && u.password === pass);
+  if (!found) {
+    toast('Invalid credentials', 'error');
+    return;
+  }
+
+  currentUser = found;
+  ssSet('user', currentUser);
+  renderApp();
+  toast(`Welcome, ${currentUser.name}!`, 'success');
+}
+
+function handleStudentRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const phone = document.getElementById('regPhone').value.trim();
+
+  if (!name) { showErr('nameErr'); return; }
+  if (!email || !email.includes('@')) { showErr('emailErr'); return; }
+  if (!username) { showErr('regUserErr'); return; }
+  if (!password || password.length < 6) { showErr('passRegErr'); return; }
+  if (!phone) { showErr('phoneErr'); return; }
+
+  if (users.some(u => u.username === username)) {
+    toast('Username already taken', 'error');
+    return;
+  }
+
+  const newStudent = {
+    id: 'PENDING-' + Date.now(),
+    name, email, username, password, phone,
+    status: 'pending',
+    appliedAt: new Date().toISOString()
+  };
+
+  pendingStudents.push(newStudent);
+  lsSet('mssms_pending', pendingStudents);
+  toast('Registration submitted! Admin will approve it soon.', 'success');
+  switchPage('login');
+  ['regName', 'regEmail', 'regUsername', 'regPassword', 'regPhone'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function logout() {
+  sessionStorage.clear();
+  currentUser = null;
+  showPage('login');
+  ['loginUser', 'loginPass'].forEach(id => { document.getElementById(id).value = ''; });
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                       ADMIN FUNCTIONS                              ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function loadApprovals() {
+  const tbody = document.getElementById('approvalsBody');
+  if (pendingStudents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--gray);">No pending approvals</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = pendingStudents.map(s => `
+    <tr>
+      <td>${s.name}</td>
+      <td>${s.email}</td>
+      <td>${s.phone}</td>
+      <td><span class="badge-status pending">Pending</span></td>
+      <td>
+        <button class="btn btn-primary" style="width: auto; padding: 4px 12px; font-size: 11px;" onclick="approveStudent('${s.id}')"><i class="fas fa-check"></i> Approve</button>
+        <button class="btn btn-danger" style="width: auto; padding: 4px 12px; font-size: 11px;" onclick="rejectStudent('${s.id}')"><i class="fas fa-times"></i> Reject</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function approveStudent(pendingId) {
+  const pend = pendingStudents.find(s => s.id === pendingId);
+  if (!pend) return;
+
+  const student = {
+    id: 'MSS-' + Date.now(),
+    ...pend,
+    status: 'approved',
+    grade: 'Grade 9 - A',
+    guardianName: '',
+    approvedAt: new Date().toISOString()
+  };
+
+  const newUser = {
+    username: pend.username,
+    password: pend.password,
+    role: 'student',
+    name: pend.name,
+    email: pend.email,
+    phone: pend.phone
+  };
+
+  students.push(student);
+  users.push(newUser);
+  pendingStudents = pendingStudents.filter(s => s.id !== pendingId);
+
+  lsSet('mssms_students', students);
+  lsSet('mssms_users', users);
+  lsSet('mssms_pending', pendingStudents);
+
+  toast(`${pend.name} approved! Account created.`, 'success');
+  loadApprovals();
+}
+
+function rejectStudent(pendingId) {
+  if (!confirm('Reject this application?')) return;
+  pendingStudents = pendingStudents.filter(s => s.id !== pendingId);
+  lsSet('mssms_pending', pendingStudents);
+  toast('Application rejected', 'error');
+  loadApprovals();
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                    PAGE RENDERERS                                  ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function showDashboard() {
+  const subtitle = {
+    admin: 'Full system access • All statistics',
+    teacher: 'Teacher Panel • Your class management',
+    registrar: 'Registrar Panel • Student enrollment',
+    finance: 'Finance Panel • Fee tracking',
+    student: 'Student Portal • Your records'
+  }[currentUser.role];
+
+  document.getElementById('dashboardSubtitle').textContent = subtitle;
+
+  const stats = {
+    admin: [
+      { label: 'Total Students', value: students.length, icon: 'fa-users', color: 'blue' },
+      { label: 'Pending Approvals', value: pendingStudents.length, icon: 'fa-hourglass', color: 'orange' },
+      { label: 'Fees Collected', value: 'ETB ' + fees.reduce((a, f) => a + f.amount, 0), icon: 'fa-money-bill', color: 'green' }
+    ],
+    teacher: [
+      { label: 'My Students', value: 0, icon: 'fa-graduation-cap', color: 'blue' },
+      { label: 'Classes', value: 1, icon: 'fa-chalkboard', color: 'orange' }
+    ],
+    registrar: [
+      { label: 'Registered Students', value: students.length, icon: 'fa-users', color: 'blue' },
+      { label: 'Pending Approvals', value: pendingStudents.length, icon: 'fa-hourglass', color: 'orange' }
+    ],
+    finance: [
+      { label: 'Fees Collected', value: 'ETB ' + fees.reduce((a, f) => a + f.amount, 0), icon: 'fa-money-bill', color: 'green' },
+      { label: 'Students Paid', value: [...new Set(fees.map(f => f.studentId))].length, icon: 'fa-users', color: 'blue' }
+    ],
+    student: [
+      { label: 'My Grade', value: '—', icon: 'fa-chart-bar', color: 'blue' },
+      { label: 'Attendance', value: '—', icon: 'fa-calendar-check', color: 'green' }
+    ]
+  }[currentUser.role];
+
+  const html = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-icon ${s.color}"><i class="fas ${s.icon}"></i></div>
+      <div class="stat-info">
+        <div class="label">${s.label}</div>
+        <div class="value">${s.value}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('dashStats').innerHTML = html;
+}
+
+function loadStudents() {
+  const tbody = document.getElementById('studentsBody');
+  document.getElementById('studentCountSub').textContent = `Total: ${students.length} students`;
+
+  if (students.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--gray);">No students registered yet</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = students.map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.name}</td>
+      <td>${s.id}</td>
+      <td>${s.grade || '—'}</td>
+      <td><span class="badge-status approved">Approved</span></td>
+      <td><button class="btn" style="background: none; color: var(--secondary); font-size: 12px; padding: 0;" onclick="alert('View: ' + s.name)"><i class="fas fa-eye"></i></button></td>
+    </tr>
+  `).join('');
+
+  if (currentUser.role !== 'registrar') document.getElementById('addStudentBtn').style.display = 'none';
+}
+
+function loadMyStudents() {
+  const tbody = document.getElementById('myStudentsBody');
+  document.getElementById('myStudentsCountSub').textContent = `Your class students`;
+
+  const myStudents = students.filter(s => s.teacher === currentUser.username);
+  if (myStudents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--gray);">No students assigned</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = myStudents.map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.name}</td>
+      <td>${s.id}</td>
+      <td>${s.email || '—'}</td>
+      <td>${s.guardianName || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+function loadAttendance() {
+  const grade = document.getElementById('attGrade').value;
+  if (!grade) {
+    document.getElementById('attendanceContent').innerHTML = '<p style="color: var(--gray); padding: 20px; text-align: center;">Select a class to mark attendance</p>';
+    return;
+  }
+
+  const classStudents = students.filter(s => s.grade === grade);
+  let html = '<div class="table-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Present</th><th>Absent</th><th>Late</th></tr></thead><tbody>';
+  html += classStudents.map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.name}</td>
+      <td><input type="radio" name="att_${s.id}" value="present" checked style="accent-color: var(--success);"/></td>
+      <td><input type="radio" name="att_${s.id}" value="absent" style="accent-color: var(--danger);"/></td>
+      <td><input type="radio" name="att_${s.id}" value="late" style="accent-color: var(--warning);"/></td>
+    </tr>
+  `).join('');
+  html += '</tbody></table></div>';
+  document.getElementById('attendanceContent').innerHTML = html;
+}
+
+function loadGrades() {
+  document.getElementById('gradesContent').innerHTML = '<p style="color: var(--gray); padding: 20px; text-align: center;">Grade entry coming soon</p>';
+}
+
+function loadFees() {
+  const tbody = document.getElementById('feesBody');
+  document.getElementById('totalFees').textContent = 'ETB ' + fees.reduce((a, f) => a + f.amount, 0);
+  document.getElementById('studentsPaid').textContent = [...new Set(fees.map(f => f.studentId))].length;
+
+  if (fees.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--gray);">No fee records</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = fees.map(f => `
+    <tr>
+      <td>${f.studentId}</td>
+      <td>ETB ${f.amount}</td>
+      <td>${f.date}</td>
+      <td>${f.type || 'Tuition'}</td>
+    </tr>
+  `).join('');
+}
+
+function loadUsers() {
+  const grid = document.getElementById('usersGrid');
+  const staffUsers = users.filter(u => u.role !== 'student');
+
+  grid.innerHTML = staffUsers.map(u => `
+    <div class="card">
+      <div style="text-align: center; margin-bottom: 12px;">
+        <div style="font-size: 28px; margin-bottom: 8px;">${u.name[0].toUpperCase()}</div>
+        <div style="font-weight: 700; color: var(--primary);">${u.name}</div>
+        <div style="font-size: 12px; color: var(--gray);">@${u.username}</div>
+        <span class="role-badge ${u.role}" style="margin-top: 8px; display: inline-block;">${ROLES[u.role].name}</span>
+      </div>
+      <div style="font-size: 12px; color: var(--gray); margin-bottom: 12px;">
+        <div>${u.email}</div>
+        <div>${u.phone}</div>
+      </div>
+      <button class="btn btn-danger" style="width: 100%; font-size: 12px;" onclick="deleteUser('${u.username}')"><i class="fas fa-trash"></i> Delete</button>
+    </div>
+  `).join('');
+}
+
+function loadSettings() {
+  document.getElementById('profileName').value = currentUser.name;
+  document.getElementById('profileRole').value = ROLES[currentUser.role].name;
+  document.getElementById('profileEmail').value = currentUser.email || '';
+  document.getElementById('profilePhone').value = currentUser.phone || '';
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                    MODAL OPERATIONS                                ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openFeeModal() {
+  document.getElementById('feeDate').value = new Date().toISOString().split('T')[0];
+  openModal('feeModal');
+}
+
+function saveFee() {
+  const sid = document.getElementById('feeStudentId').value.trim();
+  const amt = parseFloat(document.getElementById('feeAmount').value);
+  const date = document.getElementById('feeDate').value;
+
+  if (!sid || isNaN(amt)) { toast('Please fill all fields', 'error'); return; }
+
+  const fee = { studentId: sid, amount: amt, date, type: 'Tuition', notes: document.getElementById('feeNotes').value };
+  fees.push(fee);
+  lsSet('mssms_fees', fees);
+  closeModal('feeModal');
+  toast('Fee recorded', 'success');
+  loadFees();
+}
+
+function openAddStudentModal() {
+  document.getElementById('addStudGrade').innerHTML = '<option value="">-- Select Grade --</option><option>Grade 9 - A</option><option>Grade 9 - B</option><option>Grade 10 - A</option><option>Grade 10 - B</option><option>Grade 11</option><option>Grade 12</option>';
+  openModal('addStudentModal');
+}
+
+function saveStudent() {
+  const name = document.getElementById('addStudName').value.trim();
+  const grade = document.getElementById('addStudGrade').value;
+  const guardian = document.getElementById('addStudGuardian').value.trim();
+  const phone = document.getElementById('addStudPhone').value.trim();
+
+  if (!name || !grade) { toast('Name and grade required', 'error'); return; }
+
+  const student = {
+    id: 'MSS-' + Date.now(),
+    name, grade,
+    guardianName: guardian,
+    guardianPhone: phone,
+    email: document.getElementById('addStudEmail').value.trim(),
+    dob: document.getElementById('addStudDOB').value,
+    status: 'active'
+  };
+
+  students.push(student);
+  lsSet('mssms_students', students);
+  closeModal('addStudentModal');
+  toast(`${name} added`, 'success');
+  loadStudents();
+}
+
+function openAddUserModal() {
+  ['newUserName', 'newUserRole', 'newUserUsername', 'newUserPassword', 'newUserEmail', 'newUserPhone'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  openModal('addUserModal');
+}
+
+function addUser() {
+  const name = document.getElementById('newUserName').value.trim();
+  const role = document.getElementById('newUserRole').value;
+  const username = document.getElementById('newUserUsername').value.trim();
+  const password = document.getElementById('newUserPassword').value;
+
+  if (!name || !role || !username || !password) { toast('Fill all required fields', 'error'); return; }
+  if (users.some(u => u.username === username)) { toast('Username taken', 'error'); return; }
+
+  const user = { name, role, username, password, email: document.getElementById('newUserEmail').value.trim(), phone: document.getElementById('newUserPhone').value.trim() };
+  users.push(user);
+  lsSet('mssms_users', users);
+  closeModal('addUserModal');
+  toast(`User ${name} created`, 'success');
+  loadUsers();
+}
+
+function deleteUser(username) {
+  if (!confirm('Delete this user?')) return;
+  users = users.filter(u => u.username !== username);
+  lsSet('mssms_users', users);
+  toast('User deleted', 'error');
+  loadUsers();
+}
+
+function saveProfile() {
+  currentUser.email = document.getElementById('profileEmail').value.trim();
+  currentUser.phone = document.getElementById('profilePhone').value.trim();
+  const idx = users.findIndex(u => u.username === currentUser.username);
+  if (idx > -1) {
+    users[idx] = currentUser;
+    lsSet('mssms_users', users);
+  }
+  ssSet('user', currentUser);
+  toast('Profile saved', 'success');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                     UTILITIES                                      ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function showErr(id) { document.getElementById(id).classList.add('show'); setTimeout(() => document.getElementById(id).classList.remove('show'), 3000); }
+
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span>`;
+  container.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>

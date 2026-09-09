@@ -1,0 +1,28 @@
+{
+  "name": "mechara-school-sms",
+  "version": "1.0.0",
+  "description": "Mechara Secondary School Management System - Role-based student & staff portal with admin verification workflow",
+  "private": true,
+  "main": "MSSMS/frontend.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build needed'"
+  },
+  "keywords": [
+    "school",
+    "management",
+    "system",
+    "student",
+    "attendance",
+    "grades",
+    "fees",
+    "rbac"
+  ],
+  "author": "Mechara Secondary School",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mechara-school-sms.git"
+  }
+}
