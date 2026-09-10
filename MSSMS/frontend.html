@@ -782,6 +782,115 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;" id="usersGrid"></div>
       </div>
     </div>
+
+    <!-- STUDENT: PROFILE PAGE -->
+    <div class="page" id="page-student-profile">
+      <div class="card" style="max-width: 600px;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Full Name</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfileName">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Student ID</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfileId">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Email</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfileEmail">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Grade/Class</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfileGrade">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Guardian Phone</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfilePhone">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Status</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="stdProfileStatus">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT: MY GRADES PAGE -->
+    <div class="page" id="page-student-grades">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-chart-bar"></i> My Grades</div>
+            <div class="card-subtitle">Your subject grades and performance</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="studentGradesTable">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Test 1</th>
+                <th>Test 2</th>
+                <th>Final</th>
+                <th>Average</th>
+              </tr>
+            </thead>
+            <tbody id="studentGradesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT: SCHEDULE PAGE -->
+    <div class="page" id="page-student-schedule">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-calendar-alt"></i> Class Schedule</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;" id="scheduleGrid"></div>
+      </div>
+    </div>
+
+    <!-- STUDENT: MY CLASS PAGE -->
+    <div class="page" id="page-student-class">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-users"></i> My Classmates</div>
+            <div class="card-subtitle">Students in your class</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="studentClassTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="studentClassBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT: ANNOUNCEMENTS PAGE -->
+    <div class="page" id="page-student-announcements">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-bullhorn"></i> Announcements</div>
+        </div>
+        <div id="announcementsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
+
+    <!-- STUDENT: COURSE MATERIALS PAGE -->
+    <div class="page" id="page-student-materials">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-book"></i> Course Materials</div>
+        </div>
+        <div id="materialsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
+
+    <!-- STUDENT: ASSIGNMENTS & PROJECTS PAGE -->
+    <div class="page" id="page-student-assignments">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-tasks"></i> Assignments & Projects</div>
+        </div>
+        <div id="assignmentsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -892,7 +1001,7 @@ const ROLES = {
   teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'settings'] },
   registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
   finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
-  student: { name: 'Student', pages: ['dashboard', 'settings'] },
+  student: { name: 'Student', pages: ['dashboard', 'student-profile', 'student-grades', 'student-schedule', 'student-class', 'student-announcements', 'student-materials', 'student-assignments', 'settings'] },
 };
 
 // ╔════════════════════════════════════════════════════════════════════╗
@@ -909,13 +1018,33 @@ let users = lsGet('mssms_users', [
   { username: 'teacher', password: 'teacher123', role: 'teacher', name: 'Demo Teacher', email: 'teacher@school.edu', phone: '' },
   { username: 'registrar', password: 'reg123', role: 'registrar', name: 'Registrar', email: 'reg@school.edu', phone: '' },
   { username: 'finance', password: 'fin123', role: 'finance', name: 'Finance', email: 'fin@school.edu', phone: '' },
+  { username: 'student', password: 'student123', role: 'student', name: 'John Doe', email: 'john@school.edu', phone: '+251 912345678', studentId: 'MSS-001' },
 ]);
 
-let students = lsGet('mssms_students', []);
+let students = lsGet('mssms_students', [
+  { id: 'MSS-001', name: 'John Doe', grade: 'Grade 9 - A', email: 'john@school.edu', guardianPhone: '+251 912345678', status: 'active' },
+  { id: 'MSS-002', name: 'Jane Smith', grade: 'Grade 9 - A', email: 'jane@school.edu', guardianPhone: '+251 912345679', status: 'active' },
+  { id: 'MSS-003', name: 'Tom Wilson', grade: 'Grade 10 - B', email: 'tom@school.edu', guardianPhone: '+251 912345680', status: 'active' },
+]);
 let pendingStudents = lsGet('mssms_pending', []);  // Students awaiting admin approval
 let fees = lsGet('mssms_fees', []);
 let attendance = lsGet('mssms_attendance', {});
-let grades = lsGet('mssms_grades', {});
+let grades = lsGet('mssms_grades', {
+  'Grade 9 - A': {
+    'MSS-001': {
+      'Mathematics': { teacher: 'Demo Teacher', test1: 85, test2: 88, final: 90, average: 87.7 },
+      'English': { teacher: 'Mr. Johnson', test1: 92, test2: 89, final: 91, average: 90.7 },
+      'Science': { teacher: 'Ms. Smith', test1: 80, test2: 82, final: 85, average: 82.3 },
+      'History': { teacher: 'Dr. Brown', test1: 88, test2: 90, final: 89, average: 89 }
+    },
+    'MSS-002': {
+      'Mathematics': { teacher: 'Demo Teacher', test1: 92, test2: 94, final: 96, average: 94 },
+      'English': { teacher: 'Mr. Johnson', test1: 88, test2: 87, final: 90, average: 88.3 },
+      'Science': { teacher: 'Ms. Smith', test1: 85, test2: 86, final: 88, average: 86.3 },
+      'History': { teacher: 'Dr. Brown', test1: 90, test2: 91, final: 92, average: 91 }
+    }
+  }
+});
 
 let currentUser = ssGet('user', null);
 
@@ -977,7 +1106,15 @@ function buildNav() {
     { id: 'grades', icon: 'fa-chart-bar', label: 'Grades', role: ['admin', 'teacher'] },
     { id: 'fees', icon: 'fa-money-bill-wave', label: 'Fees', role: ['admin', 'finance'] },
     { id: 'users', icon: 'fa-users-cog', label: 'Users', role: ['admin'] },
-    { id: 'settings', icon: 'fa-cog', label: 'Settings', role: ['admin', 'teacher', 'registrar', 'finance'] },
+    // Student pages
+    { id: 'student-profile', icon: 'fa-user-circle', label: 'My Profile', role: ['student'] },
+    { id: 'student-grades', icon: 'fa-chart-bar', label: 'My Grades', role: ['student'] },
+    { id: 'student-schedule', icon: 'fa-calendar-alt', label: 'Schedule', role: ['student'] },
+    { id: 'student-class', icon: 'fa-users', label: 'My Class', role: ['student'] },
+    { id: 'student-announcements', icon: 'fa-bullhorn', label: 'Announcements', role: ['student'] },
+    { id: 'student-materials', icon: 'fa-book', label: 'Course Materials', role: ['student'] },
+    { id: 'student-assignments', icon: 'fa-tasks', label: 'Assignments', role: ['student'] },
+    { id: 'settings', icon: 'fa-cog', label: 'Settings', role: ['admin', 'teacher', 'registrar', 'finance', 'student'] },
   ];
 
   items.forEach(item => {
@@ -1000,7 +1137,9 @@ function navigateTo(pageId) {
   const page = document.getElementById('page-' + pageId);
   if (page) {
     page.classList.add('active');
-    document.getElementById('pageTitle').textContent = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+    // Format page title with hyphens
+    let title = pageId.replace(/-/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    document.getElementById('pageTitle').textContent = title;
   }
 
   if (pageId === 'approvals') loadApprovals();
@@ -1011,6 +1150,13 @@ function navigateTo(pageId) {
   if (pageId === 'fees') loadFees();
   if (pageId === 'users') loadUsers();
   if (pageId === 'settings') loadSettings();
+  if (pageId === 'student-profile') loadStudentProfile();
+  if (pageId === 'student-grades') loadStudentGrades();
+  if (pageId === 'student-schedule') loadStudentSchedule();
+  if (pageId === 'student-class') loadStudentClass();
+  if (pageId === 'student-announcements') loadStudentAnnouncements();
+  if (pageId === 'student-materials') loadStudentMaterials();
+  if (pageId === 'student-assignments') loadStudentAssignments();
   if (pageId === 'dashboard') showDashboard();
 }
 
@@ -1114,8 +1260,9 @@ function approveStudent(pendingId) {
   const pend = pendingStudents.find(s => s.id === pendingId);
   if (!pend) return;
 
+  const studentId = 'MSS-' + Date.now();
   const student = {
-    id: 'MSS-' + Date.now(),
+    id: studentId,
     ...pend,
     status: 'approved',
     grade: 'Grade 9 - A',
@@ -1129,7 +1276,8 @@ function approveStudent(pendingId) {
     role: 'student',
     name: pend.name,
     email: pend.email,
-    phone: pend.phone
+    phone: pend.phone,
+    studentId: studentId  // Link user to student record
   };
 
   students.push(student);
@@ -1421,6 +1569,188 @@ function saveProfile() {
   }
   ssSet('user', currentUser);
   toast('Profile saved', 'success');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                  STUDENT FUNCTIONS                                 ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function loadStudentProfile() {
+  const std = students.find(s => s.id === currentUser.studentId);
+  if (!std) { toast('Student profile not found', 'error'); return; }
+  
+  document.getElementById('stdProfileName').textContent = std.name || '-';
+  document.getElementById('stdProfileId').textContent = std.id || '-';
+  document.getElementById('stdProfileEmail').textContent = currentUser.email || '-';
+  document.getElementById('stdProfileGrade').textContent = std.grade || '-';
+  document.getElementById('stdProfilePhone').textContent = std.guardianPhone || '-';
+  document.getElementById('stdProfileStatus').textContent = std.status || '-';
+}
+
+function loadStudentGrades() {
+  const std = students.find(s => s.id === currentUser.studentId);
+  if (!std) return;
+  
+  const tbody = document.getElementById('studentGradesBody');
+  const gradesByClass = grades[std.grade] || {};
+  const studentGrades = gradesByClass[currentUser.studentId] || {};
+  
+  if (Object.keys(studentGrades).length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--gray);">No grades available yet</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = Object.entries(studentGrades).map(([subject, data]) => `
+    <tr>
+      <td><strong>${subject}</strong></td>
+      <td>${data.teacher || '-'}</td>
+      <td>${data.test1 || '-'}</td>
+      <td>${data.test2 || '-'}</td>
+      <td>${data.final || '-'}</td>
+      <td style="font-weight: 700; color: var(--secondary);">${data.average ? data.average.toFixed(1) : '-'}</td>
+    </tr>
+  `).join('');
+}
+
+function loadStudentSchedule() {
+  const std = students.find(s => s.id === currentUser.studentId);
+  if (!std) return;
+  
+  const container = document.getElementById('scheduleGrid');
+  
+  // Sample weekly schedule
+  const schedule = [
+    { day: 'Monday', periods: ['English - 9:00', 'Math - 10:30', 'Science - 12:00'] },
+    { day: 'Tuesday', periods: ['History - 9:00', 'Biology - 10:30', 'PE - 12:00'] },
+    { day: 'Wednesday', periods: ['Math - 9:00', 'Chemistry - 10:30', 'Art - 12:00'] },
+    { day: 'Thursday', periods: ['English - 9:00', 'Physics - 10:30', 'Music - 12:00'] },
+    { day: 'Friday', periods: ['Civics - 9:00', 'Lab - 10:30', 'Sports - 12:00'] }
+  ];
+  
+  container.innerHTML = schedule.map(s => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow);">
+      <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">${s.day}</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        ${s.periods.map(p => `<div style="font-size: 12px; padding: 8px; background: var(--light); border-radius: 8px; border-left: 3px solid var(--secondary);">${p}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadStudentClass() {
+  const std = students.find(s => s.id === currentUser.studentId);
+  if (!std) return;
+  
+  const tbody = document.getElementById('studentClassBody');
+  const classmates = students.filter(s => s.grade === std.grade && s.id !== currentUser.studentId);
+  
+  if (classmates.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--gray);">No other students in your class</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = classmates.map((c, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.id}</td>
+      <td>${c.email || '-'}</td>
+    </tr>
+  `).join('');
+}
+
+function loadStudentAnnouncements() {
+  const container = document.getElementById('announcementsContainer');
+  
+  // Sample announcements
+  const announcements = [
+    { from: 'Admin', title: 'School Holiday', date: '2026-01-15', message: 'Classes will be closed for the national holiday from January 20-25.' },
+    { from: 'Registrar', title: 'Fee Payment Deadline', date: '2026-01-10', message: 'Please submit all outstanding fees by end of month.' },
+    { from: 'Admin', title: 'Exams Schedule', date: '2026-01-05', message: 'Final exams will begin on February 15. Study wisely!' }
+  ];
+  
+  if (announcements.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--gray);">No announcements yet</div>';
+    return;
+  }
+  
+  container.innerHTML = announcements.map(a => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow); border-left: 4px solid var(--secondary);">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <div>
+          <div style="font-weight: 700; color: var(--primary);">${a.title}</div>
+          <div style="font-size: 12px; color: var(--gray);">From: ${a.from}</div>
+        </div>
+        <div style="font-size: 11px; color: var(--gray);">${new Date(a.date).toLocaleDateString()}</div>
+      </div>
+      <div style="font-size: 13px; color: var(--dark);">${a.message}</div>
+    </div>
+  `).join('');
+}
+
+function loadStudentMaterials() {
+  const container = document.getElementById('materialsContainer');
+  const std = students.find(s => s.id === currentUser.studentId);
+  if (!std) return;
+  
+  // Sample course materials
+  const materials = [
+    { subject: 'Mathematics', teacher: 'Demo Teacher', title: 'Algebra Fundamentals', date: '2026-01-08', type: 'PDF' },
+    { subject: 'English', teacher: 'Mr. Johnson', title: 'Shakespeare Literature Guide', date: '2026-01-07', type: 'PDF' },
+    { subject: 'Science', teacher: 'Ms. Smith', title: 'Biology Lab Manual', date: '2026-01-06', type: 'PDF' }
+  ];
+  
+  if (materials.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--gray);">No course materials available</div>';
+    return;
+  }
+  
+  container.innerHTML = materials.map(m => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-weight: 700; color: var(--primary);">${m.title}</div>
+        <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">
+          <div>${m.subject} - ${m.teacher}</div>
+          <div>${new Date(m.date).toLocaleDateString()}</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width: auto; padding: 8px 16px; font-size: 12px;"><i class="fas fa-download"></i> Download</button>
+    </div>
+  `).join('');
+}
+
+function loadStudentAssignments() {
+  const container = document.getElementById('assignmentsContainer');
+  
+  // Sample assignments and projects
+  const assignments = [
+    { subject: 'English', title: 'Essay: Impact of Technology', dueDate: '2026-01-20', type: 'Assignment', status: 'pending' },
+    { subject: 'Mathematics', title: 'Calculus Problem Set 5', dueDate: '2026-01-18', type: 'Assignment', status: 'pending' },
+    { subject: 'Science', title: 'Group Project: Renewable Energy', dueDate: '2026-02-01', type: 'Project', status: 'in-progress' },
+    { subject: 'History', title: 'Research Paper', dueDate: '2026-01-25', type: 'Assignment', status: 'submitted' }
+  ];
+  
+  if (assignments.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--gray);">No assignments available</div>';
+    return;
+  }
+  
+  container.innerHTML = assignments.map(a => {
+    let statusColor = a.status === 'pending' ? '#f59e0b' : a.status === 'in-progress' ? '#2563eb' : '#10b981';
+    return `
+      <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow);">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <div style="font-weight: 700; color: var(--primary);">${a.title}</div>
+            <div style="font-size: 12px; color: var(--gray);">${a.subject} - ${a.type}</div>
+          </div>
+          <span class="badge-status ${a.status}" style="text-transform: capitalize;">${a.status.replace('-', ' ')}</span>
+        </div>
+        <div style="font-size: 12px; color: var(--gray);">Due: ${new Date(a.dueDate).toLocaleDateString()}</div>
+        ${a.status === 'pending' ? `<button class="btn btn-primary" style="width: 100%; margin-top: 12px; padding: 8px; font-size: 12px;"><i class="fas fa-upload"></i> Submit</button>` : ''}
+      </div>
+    `;
+  }).join('');
 }
 
 // ╔════════════════════════════════════════════════════════════════════╗
