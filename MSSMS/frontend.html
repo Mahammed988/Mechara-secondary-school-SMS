@@ -783,6 +783,145 @@
       </div>
     </div>
 
+    <!-- TEACHER: PROFILE PAGE -->
+    <div class="page" id="page-teacher-profile">
+      <div class="card" style="max-width: 600px;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-user-circle"></i> My Profile</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Full Name</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfileName">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Username</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfileUsername">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Email</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfileEmail">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Phone</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfilePhone">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Subject(s)</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfileSubjects">-</div></div>
+          <div><label style="font-size: 12px; color: var(--gray); font-weight: 600;">Assigned Class</label><div style="font-size: 14px; font-weight: 600; margin-top: 4px;" id="teacherProfileClass">Grade 9 - A</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEACHER: COURSE MATERIALS PAGE -->
+    <div class="page" id="page-teacher-materials">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-book"></i> Course Materials</div>
+            <div class="card-subtitle">Upload study materials for your students</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAddMaterialModal()"><i class="fas fa-plus"></i> Upload Material</button>
+        </div>
+        <div id="teacherMaterialsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
+
+    <!-- TEACHER: ASSIGNMENTS PAGE -->
+    <div class="page" id="page-teacher-assignments">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-tasks"></i> Assignments & Projects</div>
+            <div class="card-subtitle">Create and manage assignments for your class</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAddAssignmentModal()"><i class="fas fa-plus"></i> New Assignment</button>
+        </div>
+        <div id="teacherAssignmentsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
+
+    <!-- TEACHER: ANNOUNCEMENTS PAGE -->
+    <div class="page" id="page-teacher-announcements">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-bullhorn"></i> Announcements</div>
+            <div class="card-subtitle">Send messages to your class</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAddAnnouncementModal()"><i class="fas fa-plus"></i> New Announcement</button>
+        </div>
+        <div id="teacherAnnouncementsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </div>
+
+    <!-- TEACHER: GRADE SUBMISSION PAGE -->
+    <div class="page" id="page-teacher-submit-grades">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-chart-bar"></i> Submit Student Grades</div>
+            <div class="card-subtitle">Enter grades for your class students</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <select class="form-control" id="gradeSubject" style="width: auto; min-width: 160px;">
+            <option value="">Select Subject</option>
+            <option>Mathematics</option>
+            <option>English</option>
+            <option>Science</option>
+            <option>History</option>
+          </select>
+          <select class="form-control" id="gradeType" style="width: auto; min-width: 120px;">
+            <option value="">Select Type</option>
+            <option value="test1">Test 1</option>
+            <option value="test2">Test 2</option>
+            <option value="final">Final</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table id="submitGradesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Student Name</th>
+                <th>Student ID</th>
+                <th>Grade (0-100)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="submitGradesBody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="btn btn-primary" onclick="saveAllGrades()" style="width: auto;"><i class="fas fa-save"></i> Save All Grades</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEACHER: SCHEDULE PAGE -->
+    <div class="page" id="page-teacher-schedule">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-calendar-alt"></i> My Schedule</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;" id="teacherScheduleGrid"></div>
+      </div>
+    </div>
+
+    <!-- TEACHER: COMMUNICATION/MESSAGES PAGE -->
+    <div class="page" id="page-teacher-communication">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-comments"></i> Messages</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; min-height: 500px;">
+          <!-- Student List -->
+          <div style="border-right: 1px solid #e5e7eb; padding-right: 16px; overflow-y: auto;">
+            <div style="font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 12px;">Your Class Students</div>
+            <div id="studentListForMessages" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+          <!-- Messages Area -->
+          <div style="display: flex; flex-direction: column;">
+            <div id="messagesArea" style="flex: 1; overflow-y: auto; margin-bottom: 12px; padding: 12px; background: var(--light); border-radius: 10px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="text-align: center; color: var(--gray); padding: 40px 0;">Select a student to view messages</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" class="form-control" id="messageInput" placeholder="Type your message..." style="flex: 1; margin: 0;"/>
+              <button class="btn btn-primary" style="width: auto; padding: 12px 20px;" onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- STUDENT: PROFILE PAGE -->
     <div class="page" id="page-student-profile">
       <div class="card" style="max-width: 600px;">
@@ -958,6 +1097,64 @@
   </div>
 </div>
 
+<!-- TEACHER: ADD COURSE MATERIAL MODAL -->
+<div class="modal-overlay" id="addMaterialModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-book"></i> Upload Course Material</div>
+      <button class="modal-close" onclick="closeModal('addMaterialModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Material Title *</label><input type="text" class="form-control" id="materialTitle" placeholder="e.g., Algebra Fundamentals"/></div>
+      <div class="form-group full"><label>Subject *</label><select class="form-control" id="materialSubject"><option value="">Select Subject</option><option>Mathematics</option><option>English</option><option>Science</option><option>History</option></select></div>
+      <div class="form-group full"><label>Description</label><textarea class="form-control" id="materialDesc" placeholder="Brief description of the material"></textarea></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveMaterial()"><i class="fas fa-upload"></i> Upload</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('addMaterialModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER: ADD ASSIGNMENT MODAL -->
+<div class="modal-overlay" id="addAssignmentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-tasks"></i> Create Assignment</div>
+      <button class="modal-close" onclick="closeModal('addAssignmentModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Title *</label><input type="text" class="form-control" id="assignmentTitle" placeholder="e.g., Chapter 5 Problem Set"/></div>
+      <div class="form-group"><label>Subject *</label><select class="form-control" id="assignmentSubject"><option value="">Select</option><option>Mathematics</option><option>English</option><option>Science</option><option>History</option></select></div>
+      <div class="form-group"><label>Type *</label><select class="form-control" id="assignmentType"><option value="">Select</option><option value="assignment">Assignment</option><option value="project">Project</option></select></div>
+      <div class="form-group full"><label>Due Date *</label><input type="date" class="form-control" id="assignmentDueDate"/></div>
+      <div class="form-group full"><label>Description</label><textarea class="form-control" id="assignmentDesc" placeholder="Assignment details and instructions"></textarea></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveAssignment()"><i class="fas fa-check"></i> Create</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('addAssignmentModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER: ADD ANNOUNCEMENT MODAL -->
+<div class="modal-overlay" id="addAnnouncementModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-bullhorn"></i> Send Announcement</div>
+      <button class="modal-close" onclick="closeModal('addAnnouncementModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Title *</label><input type="text" class="form-control" id="announcementTitle" placeholder="e.g., Important Class Update"/></div>
+      <div class="form-group full"><label>Message *</label><textarea class="form-control" id="announcementMessage" placeholder="Write your announcement here..." style="min-height: 120px;"></textarea></div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveAnnouncement()"><i class="fas fa-paper-plane"></i> Send</button>
+      <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="closeModal('addAnnouncementModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -998,7 +1195,7 @@
 
 const ROLES = {
   admin: { name: 'Administrator', pages: ['dashboard', 'approvals', 'students', 'attendance', 'grades', 'fees', 'users', 'settings'] },
-  teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'settings'] },
+  teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'teacher-profile', 'teacher-materials', 'teacher-assignments', 'teacher-announcements', 'teacher-submit-grades', 'teacher-schedule', 'teacher-communication', 'settings'] },
   registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
   finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
   student: { name: 'Student', pages: ['dashboard', 'student-profile', 'student-grades', 'student-schedule', 'student-class', 'student-announcements', 'student-materials', 'student-assignments', 'settings'] },
@@ -1106,6 +1303,14 @@ function buildNav() {
     { id: 'grades', icon: 'fa-chart-bar', label: 'Grades', role: ['admin', 'teacher'] },
     { id: 'fees', icon: 'fa-money-bill-wave', label: 'Fees', role: ['admin', 'finance'] },
     { id: 'users', icon: 'fa-users-cog', label: 'Users', role: ['admin'] },
+    // Teacher pages
+    { id: 'teacher-profile', icon: 'fa-user-circle', label: 'My Profile', role: ['teacher'] },
+    { id: 'teacher-materials', icon: 'fa-book', label: 'Course Materials', role: ['teacher'] },
+    { id: 'teacher-assignments', icon: 'fa-tasks', label: 'Assignments', role: ['teacher'] },
+    { id: 'teacher-announcements', icon: 'fa-bullhorn', label: 'Announcements', role: ['teacher'] },
+    { id: 'teacher-submit-grades', icon: 'fa-pen-fancy', label: 'Submit Grades', role: ['teacher'] },
+    { id: 'teacher-schedule', icon: 'fa-calendar-alt', label: 'Schedule', role: ['teacher'] },
+    { id: 'teacher-communication', icon: 'fa-comments', label: 'Messages', role: ['teacher'] },
     // Student pages
     { id: 'student-profile', icon: 'fa-user-circle', label: 'My Profile', role: ['student'] },
     { id: 'student-grades', icon: 'fa-chart-bar', label: 'My Grades', role: ['student'] },
@@ -1150,6 +1355,13 @@ function navigateTo(pageId) {
   if (pageId === 'fees') loadFees();
   if (pageId === 'users') loadUsers();
   if (pageId === 'settings') loadSettings();
+  if (pageId === 'teacher-profile') loadTeacherProfile();
+  if (pageId === 'teacher-materials') loadTeacherMaterials();
+  if (pageId === 'teacher-assignments') loadTeacherAssignments();
+  if (pageId === 'teacher-announcements') loadTeacherAnnouncements();
+  if (pageId === 'teacher-submit-grades') loadTeacherGradeSubmission();
+  if (pageId === 'teacher-schedule') loadTeacherSchedule();
+  if (pageId === 'teacher-communication') loadTeacherCommunication();
   if (pageId === 'student-profile') loadStudentProfile();
   if (pageId === 'student-grades') loadStudentGrades();
   if (pageId === 'student-schedule') loadStudentSchedule();
@@ -1751,6 +1963,299 @@ function loadStudentAssignments() {
       </div>
     `;
   }).join('');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                  TEACHER FUNCTIONS                                 ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+let teacherMaterials = lsGet('mssms_teacher_materials', []);
+let teacherAssignments = lsGet('mssms_teacher_assignments', []);
+let teacherAnnouncements = lsGet('mssms_teacher_announcements', []);
+let teacherMessages = lsGet('mssms_teacher_messages', []);
+let selectedStudentForMessage = null;
+
+function loadTeacherProfile() {
+  document.getElementById('teacherProfileName').textContent = currentUser.name || '-';
+  document.getElementById('teacherProfileUsername').textContent = currentUser.username || '-';
+  document.getElementById('teacherProfileEmail').textContent = currentUser.email || '-';
+  document.getElementById('teacherProfilePhone').textContent = currentUser.phone || '-';
+  document.getElementById('teacherProfileSubjects').textContent = 'Mathematics, Science, English';
+}
+
+function loadTeacherMaterials() {
+  const container = document.getElementById('teacherMaterialsContainer');
+  
+  if (teacherMaterials.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>No materials uploaded yet</div>';
+    return;
+  }
+  
+  container.innerHTML = teacherMaterials.map((m, i) => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-weight: 700; color: var(--primary);">${m.title}</div>
+        <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">
+          <div>${m.subject}</div>
+          <div>${new Date(m.uploadedAt).toLocaleDateString()}</div>
+        </div>
+      </div>
+      <button class="btn btn-danger" style="width: auto; padding: 8px 12px; font-size: 12px;" onclick="deleteMaterial(${i})"><i class="fas fa-trash"></i></button>
+    </div>
+  `).join('');
+}
+
+function openAddMaterialModal() {
+  openModal('addMaterialModal');
+}
+
+function saveMaterial() {
+  const title = document.getElementById('materialTitle').value.trim();
+  const subject = document.getElementById('materialSubject').value;
+  const desc = document.getElementById('materialDesc').value.trim();
+  
+  if (!title || !subject) { toast('Title and subject required', 'error'); return; }
+  
+  const material = { title, subject, description: desc, uploadedAt: new Date().toISOString(), uploadedBy: currentUser.username };
+  teacherMaterials.push(material);
+  lsSet('mssms_teacher_materials', teacherMaterials);
+  closeModal('addMaterialModal');
+  toast('Material uploaded', 'success');
+  loadTeacherMaterials();
+}
+
+function deleteMaterial(i) {
+  if (!confirm('Delete this material?')) return;
+  teacherMaterials.splice(i, 1);
+  lsSet('mssms_teacher_materials', teacherMaterials);
+  toast('Material deleted', 'error');
+  loadTeacherMaterials();
+}
+
+function loadTeacherAssignments() {
+  const container = document.getElementById('teacherAssignmentsContainer');
+  
+  if (teacherAssignments.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>No assignments created yet</div>';
+    return;
+  }
+  
+  container.innerHTML = teacherAssignments.map((a, i) => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow);">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <div>
+          <div style="font-weight: 700; color: var(--primary);">${a.title}</div>
+          <div style="font-size: 12px; color: var(--gray);">${a.type} • ${a.subject}</div>
+        </div>
+        <button class="btn btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="deleteAssignment(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+      <div style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">Due: ${new Date(a.dueDate).toLocaleDateString()}</div>
+      <div style="font-size: 13px; color: var(--dark);">${a.description}</div>
+    </div>
+  `).join('');
+}
+
+function openAddAssignmentModal() {
+  openModal('addAssignmentModal');
+}
+
+function saveAssignment() {
+  const title = document.getElementById('assignmentTitle').value.trim();
+  const subject = document.getElementById('assignmentSubject').value;
+  const type = document.getElementById('assignmentType').value;
+  const dueDate = document.getElementById('assignmentDueDate').value;
+  const desc = document.getElementById('assignmentDesc').value.trim();
+  
+  if (!title || !subject || !type || !dueDate) { toast('All fields required', 'error'); return; }
+  
+  const assignment = { title, subject, type, dueDate, description: desc, createdAt: new Date().toISOString(), createdBy: currentUser.username };
+  teacherAssignments.push(assignment);
+  lsSet('mssms_teacher_assignments', teacherAssignments);
+  closeModal('addAssignmentModal');
+  toast('Assignment created', 'success');
+  loadTeacherAssignments();
+}
+
+function deleteAssignment(i) {
+  if (!confirm('Delete this assignment?')) return;
+  teacherAssignments.splice(i, 1);
+  lsSet('mssms_teacher_assignments', teacherAssignments);
+  toast('Assignment deleted', 'error');
+  loadTeacherAssignments();
+}
+
+function loadTeacherAnnouncements() {
+  const container = document.getElementById('teacherAnnouncementsContainer');
+  
+  if (teacherAnnouncements.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>No announcements sent yet</div>';
+    return;
+  }
+  
+  container.innerHTML = teacherAnnouncements.map((ann, i) => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow); border-left: 4px solid var(--secondary);">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <div style="font-weight: 700; color: var(--primary);">${ann.title}</div>
+        <button class="btn btn-danger" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="deleteAnnouncement(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+      <div style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">${new Date(ann.createdAt).toLocaleDateString()}</div>
+      <div style="font-size: 13px; color: var(--dark);">${ann.message}</div>
+    </div>
+  `).join('');
+}
+
+function openAddAnnouncementModal() {
+  openModal('addAnnouncementModal');
+}
+
+function saveAnnouncement() {
+  const title = document.getElementById('announcementTitle').value.trim();
+  const message = document.getElementById('announcementMessage').value.trim();
+  
+  if (!title || !message) { toast('Title and message required', 'error'); return; }
+  
+  const announcement = { title, message, createdAt: new Date().toISOString(), createdBy: currentUser.username };
+  teacherAnnouncements.push(announcement);
+  lsSet('mssms_teacher_announcements', teacherAnnouncements);
+  closeModal('addAnnouncementModal');
+  toast('Announcement sent', 'success');
+  loadTeacherAnnouncements();
+}
+
+function deleteAnnouncement(i) {
+  if (!confirm('Delete this announcement?')) return;
+  teacherAnnouncements.splice(i, 1);
+  lsSet('mssms_teacher_announcements', teacherAnnouncements);
+  toast('Announcement deleted', 'error');
+  loadTeacherAnnouncements();
+}
+
+function loadTeacherGradeSubmission() {
+  const tbody = document.getElementById('submitGradesBody');
+  const myStudents = students.filter(s => s.grade === 'Grade 9 - A'); // Teacher's class
+  
+  tbody.innerHTML = myStudents.map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.name}</td>
+      <td>${s.id}</td>
+      <td><input type="number" class="form-control" id="grade-${s.id}" min="0" max="100" style="margin: 0; width: 100%;"/></td>
+      <td><button class="btn btn-primary" style="width: auto; padding: 4px 8px; font-size: 11px;" onclick="submitSingleGrade('${s.id}')"><i class="fas fa-check"></i></button></td>
+    </tr>
+  `).join('');
+}
+
+function submitSingleGrade(studentId) {
+  const gradeInput = document.getElementById(`grade-${studentId}`);
+  const grade = parseFloat(gradeInput.value);
+  const subject = document.getElementById('gradeSubject').value;
+  const type = document.getElementById('gradeType').value;
+  
+  if (isNaN(grade) || !subject || !type) { toast('Fill all fields', 'error'); return; }
+  
+  if (!grades['Grade 9 - A']) grades['Grade 9 - A'] = {};
+  if (!grades['Grade 9 - A'][studentId]) grades['Grade 9 - A'][studentId] = {};
+  if (!grades['Grade 9 - A'][studentId][subject]) grades['Grade 9 - A'][studentId][subject] = {};
+  
+  grades['Grade 9 - A'][studentId][subject][type] = grade;
+  
+  // Calculate average
+  const s = grades['Grade 9 - A'][studentId][subject];
+  const validGrades = [s.test1, s.test2, s.final].filter(g => g && !isNaN(g));
+  s.average = validGrades.length > 0 ? validGrades.reduce((a, b) => a + b) / validGrades.length : 0;
+  s.teacher = currentUser.name;
+  
+  lsSet('mssms_grades', grades);
+  toast(`Grade submitted for ${studentId}`, 'success');
+  gradeInput.value = '';
+}
+
+function saveAllGrades() {
+  toast('All grades saved', 'success');
+  loadTeacherGradeSubmission();
+}
+
+function loadTeacherSchedule() {
+  const container = document.getElementById('teacherScheduleGrid');
+  
+  const schedule = [
+    { day: 'Monday', periods: ['Grade 9-A: 9:00-10:30', 'Grade 10-B: 11:00-12:30'] },
+    { day: 'Tuesday', periods: ['Grade 9-A: 10:30-12:00', 'Grade 10-A: 1:00-2:30'] },
+    { day: 'Wednesday', periods: ['Grade 9-A: 9:00-10:30', 'Office Hours: 2:00-3:00'] },
+    { day: 'Thursday', periods: ['Grade 10-B: 9:00-10:30', 'Grade 9-A: 11:00-12:30'] },
+    { day: 'Friday', periods: ['Grade 9-A: 9:00-10:30', 'Staff Meeting: 2:00-3:30'] }
+  ];
+  
+  container.innerHTML = schedule.map(s => `
+    <div style="background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--card-shadow);">
+      <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">${s.day}</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        ${s.periods.map(p => `<div style="font-size: 12px; padding: 8px; background: var(--light); border-radius: 8px; border-left: 3px solid var(--secondary);">${p}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadTeacherCommunication() {
+  const myStudents = students.filter(s => s.grade === 'Grade 9 - A');
+  const studentListDiv = document.getElementById('studentListForMessages');
+  
+  studentListDiv.innerHTML = myStudents.map(s => `
+    <div style="padding: 12px; border-radius: 8px; cursor: pointer; background: #fff; border: 2px solid transparent; transition: all .2s;" onmouseover="this.style.background='var(--light)'" onmouseout="this.style.background='#fff'" onclick="selectStudentForMessage('${s.id}', '${s.name}')">
+      <div style="font-weight: 600; color: var(--primary); font-size: 13px;">${s.name}</div>
+      <div style="font-size: 11px; color: var(--gray);">${s.id}</div>
+    </div>
+  `).join('');
+}
+
+function selectStudentForMessage(studentId, studentName) {
+  selectedStudentForMessage = { id: studentId, name: studentName };
+  const messagesArea = document.getElementById('messagesArea');
+  
+  const studentMessages = teacherMessages.filter(m => 
+    (m.from === currentUser.username && m.toStudentId === studentId) || 
+    (m.toTeacher === currentUser.username && m.fromStudentId === studentId)
+  );
+  
+  if (studentMessages.length === 0) {
+    messagesArea.innerHTML = `<div style="text-align: center; color: var(--gray); padding: 40px 0;">No messages yet. Start a conversation with ${studentName}</div>`;
+  } else {
+    messagesArea.innerHTML = studentMessages.map(msg => `
+      <div style="margin-bottom: 12px; display: flex; flex-direction: column; align-items: ${msg.from === currentUser.username ? 'flex-end' : 'flex-start'};">
+        <div style="background: ${msg.from === currentUser.username ? 'var(--secondary)' : 'var(--light)'}; color: ${msg.from === currentUser.username ? '#fff' : 'var(--dark)'}; padding: 10px 14px; border-radius: 10px; max-width: 80%; word-wrap: break-word; font-size: 13px;">
+          ${msg.content}
+        </div>
+        <div style="font-size: 11px; color: var(--gray); margin-top: 4px;">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+      </div>
+    `).join('');
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+}
+
+function sendMessage() {
+  if (!selectedStudentForMessage) { toast('Select a student first', 'error'); return; }
+  
+  const messageInput = document.getElementById('messageInput');
+  const content = messageInput.value.trim();
+  
+  if (!content) { toast('Message cannot be empty', 'error'); return; }
+  
+  const message = {
+    from: currentUser.username,
+    fromName: currentUser.name,
+    toStudentId: selectedStudentForMessage.id,
+    toStudentName: selectedStudentForMessage.name,
+    toTeacher: null,
+    fromStudentId: null,
+    content,
+    timestamp: new Date().toISOString()
+  };
+  
+  teacherMessages.push(message);
+  lsSet('mssms_teacher_messages', teacherMessages);
+  messageInput.value = '';
+  selectStudentForMessage(selectedStudentForMessage.id, selectedStudentForMessage.name);
+  toast('Message sent', 'success');
 }
 
 // ╔════════════════════════════════════════════════════════════════════╗
