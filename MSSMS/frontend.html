@@ -850,6 +850,90 @@
       </div>
     </div>
 
+    <!-- REGISTRAR: CLASS SCHEDULE PAGE -->
+    <div class="page" id="page-registrar-schedule">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-calendar-check"></i> Class Schedule Management</div>
+            <div class="card-subtitle">Create and manage class schedules for all grades</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAddScheduleModal()"><i class="fas fa-plus"></i> Add Schedule</button>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label style="font-weight: 600; margin-bottom: 8px; display: block;">Select Grade to View</label>
+          <select class="form-control" id="scheduleGradeFilter" onchange="loadSchedulesByGrade()" style="max-width: 300px;">
+            <option value="">All Grades</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table id="scheduleTable">
+            <thead>
+              <tr>
+                <th>Grade</th>
+                <th>Section</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Time</th>
+                <th>Room</th>
+                <th>Days</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRAR: CLASS ASSIGNMENT PAGE -->
+    <div class="page" id="page-registrar-classes">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-chalkboard-user"></i> Assign Classes to Students</div>
+            <div class="card-subtitle">Assign registered students to classes and teachers</div>
+          </div>
+          <button class="btn btn-primary" style="width: auto;" onclick="openAssignClassModal()"><i class="fas fa-plus"></i> Assign Class</button>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label style="font-weight: 600; margin-bottom: 8px; display: block;">Filter by Grade</label>
+          <select class="form-control" id="classGradeFilter" onchange="loadStudentClassAssignments()" style="max-width: 300px;">
+            <option value="">All Grades</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table id="classAssignmentTable">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Student ID</th>
+                <th>Grade</th>
+                <th>Assigned Class</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="classAssignmentBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- TEACHER: PROFILE PAGE -->
     <div class="page" id="page-teacher-profile">
       <div class="card" style="max-width: 600px;">
@@ -1345,7 +1429,7 @@
 const ROLES = {
   admin: { name: 'Administrator', pages: ['dashboard', 'approvals', 'registered-students', 'students', 'attendance', 'grades', 'fees', 'users', 'settings'] },
   teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'teacher-profile', 'teacher-materials', 'teacher-assignments', 'teacher-announcements', 'teacher-submit-grades', 'teacher-schedule', 'teacher-communication', 'settings'] },
-  registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
+  registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'registrar-schedule', 'registrar-classes', 'settings'] },
   finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
   student: { name: 'Student', pages: ['dashboard', 'student-profile', 'student-grades', 'student-schedule', 'student-class', 'student-announcements', 'student-materials', 'student-assignments', 'student-register', 'settings'] },
 };
@@ -1415,7 +1499,27 @@ function showPage(page) {
 }
 
 function switchPage(page) {
+  // Handle page-level switching (login, studentRegister, main app)
   showPage(page);
+  
+  // Handle login form switching (login, forgotPassword, studentRegister forms)
+  document.getElementById('loginFormContainer').style.display = page === 'login' ? 'block' : 'none';
+  document.getElementById('forgotPasswordContainer').style.display = page === 'forgotPassword' ? 'block' : 'none';
+  document.getElementById('studentRegisterContainer').style.display = page === 'studentRegister' ? 'block' : 'none';
+  
+  // Reset forms
+  if (page === 'login') {
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('resetSuccessMessage').style.display = 'none';
+  } else if (page === 'forgotPassword') {
+    document.getElementById('forgotEmail').value = '';
+    document.getElementById('resetSuccessMessage').style.display = 'none';
+  }
+}
+
+function showRegisterPage() {
+  switchPage('studentRegister');
 }
 
 function renderApp() {
@@ -1453,6 +1557,9 @@ function buildNav() {
     { id: 'grades', icon: 'fa-chart-bar', label: 'Grades', role: ['admin', 'teacher'] },
     { id: 'fees', icon: 'fa-money-bill-wave', label: 'Fees', role: ['admin', 'finance'] },
     { id: 'users', icon: 'fa-users-cog', label: 'Users', role: ['admin'] },
+    // Registrar pages
+    { id: 'registrar-schedule', icon: 'fa-calendar-check', label: 'Class Schedule', role: ['registrar'] },
+    { id: 'registrar-classes', icon: 'fa-chalkboard-user', label: 'Assign Classes', role: ['registrar'] },
     // Teacher pages
     { id: 'teacher-profile', icon: 'fa-user-circle', label: 'My Profile', role: ['teacher'] },
     { id: 'teacher-materials', icon: 'fa-book', label: 'Course Materials', role: ['teacher'] },
@@ -1522,6 +1629,8 @@ function navigateTo(pageId) {
   if (pageId === 'student-materials') loadStudentMaterials();
   if (pageId === 'student-assignments') loadStudentAssignments();
   if (pageId === 'student-register') loadStudentRegistration();
+  if (pageId === 'registrar-schedule') loadRegistrarSchedule();
+  if (pageId === 'registrar-classes') loadRegistrarClasses();
   if (pageId === 'dashboard') showDashboard();
 }
 
@@ -1625,10 +1734,6 @@ function switchPage(page) {
     document.getElementById('forgotEmail').value = '';
     document.getElementById('resetSuccessMessage').style.display = 'none';
   }
-}
-
-function showRegisterPage() {
-  switchPage('studentRegister');
 }
 
 function handleStudentRegister(e) {
@@ -1769,7 +1874,9 @@ function showDashboard() {
     ],
     registrar: [
       { label: 'Registered Students', value: students.length, icon: 'fa-users', color: 'blue' },
-      { label: 'Pending Approvals', value: pendingStudents.length, icon: 'fa-hourglass', color: 'orange' }
+      { label: 'Pending Approvals', value: pendingStudents.length, icon: 'fa-hourglass', color: 'orange' },
+      { label: 'Class Schedules', value: classSchedules.length, icon: 'fa-calendar-check', color: 'green' },
+      { label: 'Class Assignments', value: studentClassAssignments.length, icon: 'fa-chalkboard-user', color: 'purple' }
     ],
     finance: [
       { label: 'Fees Collected', value: 'ETB ' + fees.reduce((a, f) => a + f.amount, 0), icon: 'fa-money-bill', color: 'green' },
@@ -1777,7 +1884,8 @@ function showDashboard() {
     ],
     student: [
       { label: 'My Grade', value: '—', icon: 'fa-chart-bar', color: 'blue' },
-      { label: 'Attendance', value: '—', icon: 'fa-calendar-check', color: 'green' }
+      { label: 'Attendance', value: '—', icon: 'fa-calendar-check', color: 'green' },
+      { label: 'My Class', value: currentUser.class || 'Not Assigned', icon: 'fa-chalkboard', color: 'orange' }
     ]
   }[currentUser.role];
 
@@ -2082,6 +2190,31 @@ function loadStudentSchedule() {
 function loadStudentClass() {
   const std = students.find(s => s.id === currentUser.studentId);
   if (!std) return;
+  
+  // Show class assignment info if available
+  const assignment = studentClassAssignments.find(a => a.studentId === currentUser.username);
+  const classInfoDiv = document.getElementById('page-student-class').querySelector('.card');
+  
+  if (assignment) {
+    // Add assignment info card
+    const infoHtml = `
+      <div style="background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <div style="font-size: 13px; opacity: 0.9;">Your Class Assignment</div>
+        <div style="font-size: 18px; font-weight: 700; margin: 8px 0;">${assignment.assignedClass}</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; font-size: 12px;">
+          <div>
+            <div style="opacity: 0.8;">Teacher</div>
+            <div style="font-weight: 600;">${assignment.teacher}</div>
+          </div>
+          <div>
+            <div style="opacity: 0.8;">Room</div>
+            <div style="font-weight: 600;">${assignment.room}</div>
+          </div>
+        </div>
+      </div>
+    `;
+    classInfoDiv.insertAdjacentHTML('afterbegin', infoHtml);
+  }
   
   const tbody = document.getElementById('studentClassBody');
   const classmates = students.filter(s => s.grade === std.grade && s.id !== currentUser.studentId);
@@ -2493,6 +2626,8 @@ function sendMessage() {
 // ╚════════════════════════════════════════════════════════════════════╝
 
 let studentRegistrations = lsGet('mssms_student_registrations', []);
+let classSchedules = lsGet('mssms_class_schedules', []);
+let studentClassAssignments = lsGet('mssms_student_class_assignments', []);
 
 function loadStudentRegistration() {
   const registrationFormContainer = document.getElementById('registrationFormContainer');
@@ -2758,6 +2893,216 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function showPaymentOptions() {
   alert('Payment Methods:\n\n1. CBE: 1000123456789\n2. Siinqe: 1234567890\n3. Awash: 0142354678956\n4. CBO: 1000004563746854\n\nPlease contact the school office to complete payment.');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║               REGISTRAR SCHEDULE & CLASS FUNCTIONS                 ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function loadRegistrarSchedule() {
+  const tbody = document.getElementById('scheduleBody');
+  const gradeFilter = document.getElementById('scheduleGradeFilter').value;
+  
+  let filtered = classSchedules;
+  if (gradeFilter) {
+    filtered = classSchedules.filter(s => s.grade === gradeFilter);
+  }
+  
+  tbody.innerHTML = filtered.map(schedule => `
+    <tr>
+      <td><strong>${schedule.grade}</strong></td>
+      <td>${schedule.section}</td>
+      <td>${schedule.subject}</td>
+      <td>${schedule.teacher}</td>
+      <td>${schedule.time}</td>
+      <td>${schedule.room}</td>
+      <td>${schedule.days}</td>
+      <td>
+        <button class="btn" style="background: none; color: var(--danger); padding: 6px; font-size: 12px;" onclick="deleteSchedule('${schedule.id}')"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function loadRegistrarClasses() {
+  const tbody = document.getElementById('classAssignmentBody');
+  const gradeFilter = document.getElementById('classGradeFilter').value;
+  
+  let filtered = studentClassAssignments;
+  if (gradeFilter) {
+    filtered = studentClassAssignments.filter(a => a.grade === gradeFilter);
+  }
+  
+  tbody.innerHTML = filtered.map(assignment => `
+    <tr>
+      <td>${assignment.studentName}</td>
+      <td>${assignment.studentId}</td>
+      <td>Grade ${assignment.grade}</td>
+      <td>${assignment.assignedClass}</td>
+      <td>${assignment.teacher}</td>
+      <td>${assignment.room}</td>
+      <td><span class="badge-status ${assignment.status === 'Active' ? 'approved' : 'pending'}">${assignment.status}</span></td>
+      <td>
+        <button class="btn" style="background: none; color: var(--secondary); padding: 6px; font-size: 12px;" onclick="editClassAssignment('${assignment.id}')"><i class="fas fa-edit"></i></button>
+        <button class="btn" style="background: none; color: var(--danger); padding: 6px; font-size: 12px;" onclick="deleteClassAssignment('${assignment.id}')"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddScheduleModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fas fa-calendar-check"></i> Add Class Schedule</div>
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Grade *</label><select id="schedGrade" class="form-control"><option value="">Select</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select></div>
+        <div class="form-group"><label>Section *</label><input type="text" class="form-control" id="schedSection" placeholder="e.g., A, B, C"/></div>
+        <div class="form-group"><label>Subject *</label><input type="text" class="form-control" id="schedSubject" placeholder="e.g., Mathematics"/></div>
+        <div class="form-group"><label>Teacher *</label><input type="text" class="form-control" id="schedTeacher" placeholder="Teacher name"/></div>
+        <div class="form-group"><label>Time *</label><input type="text" class="form-control" id="schedTime" placeholder="e.g., 9:00 AM - 10:00 AM"/></div>
+        <div class="form-group"><label>Room *</label><input type="text" class="form-control" id="schedRoom" placeholder="e.g., Room 101"/></div>
+        <div class="form-group full"><label>Days *</label><input type="text" class="form-control" id="schedDays" placeholder="e.g., Mon, Wed, Fri"/></div>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-primary" style="flex: 1;" onclick="saveSchedule(this)"><i class="fas fa-check"></i> Save</button>
+        <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function saveSchedule(btn) {
+  const grade = document.getElementById('schedGrade').value;
+  const section = document.getElementById('schedSection').value;
+  const subject = document.getElementById('schedSubject').value;
+  const teacher = document.getElementById('schedTeacher').value;
+  const time = document.getElementById('schedTime').value;
+  const room = document.getElementById('schedRoom').value;
+  const days = document.getElementById('schedDays').value;
+  
+  if (!grade || !section || !subject || !teacher || !time || !room || !days) {
+    toast('Please fill all fields', 'error');
+    return;
+  }
+  
+  const schedule = {
+    id: 'SCHED-' + Date.now(),
+    grade, section, subject, teacher, time, room, days,
+    createdAt: new Date().toISOString()
+  };
+  
+  classSchedules.push(schedule);
+  lsSet('mssms_class_schedules', classSchedules);
+  
+  toast('Schedule added successfully', 'success');
+  btn.closest('.modal-overlay').remove();
+  loadRegistrarSchedule();
+}
+
+function deleteSchedule(scheduleId) {
+  if (confirm('Delete this schedule?')) {
+    classSchedules = classSchedules.filter(s => s.id !== scheduleId);
+    lsSet('mssms_class_schedules', classSchedules);
+    loadRegistrarSchedule();
+    toast('Schedule deleted', 'success');
+  }
+}
+
+function openAssignClassModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fas fa-chalkboard-user"></i> Assign Class to Student</div>
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full"><label>Select Student *</label><select id="assignStudent" class="form-control"><option value="">-- Select a registered student --</option></select></div>
+        <div class="form-group"><label>Grade *</label><select id="assignGrade" class="form-control"><option value="">Select</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select></div>
+        <div class="form-group"><label>Class Section *</label><input type="text" class="form-control" id="assignSection" placeholder="e.g., A, B, C"/></div>
+        <div class="form-group"><label>Teacher *</label><input type="text" class="form-control" id="assignTeacher" placeholder="Teacher name"/></div>
+        <div class="form-group"><label>Room *</label><input type="text" class="form-control" id="assignRoom" placeholder="e.g., Room 101"/></div>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-primary" style="flex: 1;" onclick="saveClassAssignment(this)"><i class="fas fa-check"></i> Assign</button>
+        <button class="btn" style="background: var(--light); color: var(--primary); flex: 1;" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Populate student dropdown with approved students
+  const studentSelect = document.getElementById('assignStudent');
+  const approvedStudents = studentRegistrations.filter(r => r.status === 'APPROVED');
+  approvedStudents.forEach(student => {
+    const option = document.createElement('option');
+    option.value = student.id;
+    option.textContent = `${student.username} (Grade ${student.grade})`;
+    studentSelect.appendChild(option);
+  });
+}
+
+function saveClassAssignment(btn) {
+  const studentId = document.getElementById('assignStudent').value;
+  const grade = document.getElementById('assignGrade').value;
+  const section = document.getElementById('assignSection').value;
+  const teacher = document.getElementById('assignTeacher').value;
+  const room = document.getElementById('assignRoom').value;
+  
+  if (!studentId || !grade || !section || !teacher || !room) {
+    toast('Please fill all fields', 'error');
+    return;
+  }
+  
+  // Get student info
+  const student = studentRegistrations.find(r => r.id === studentId);
+  if (!student) {
+    toast('Student not found', 'error');
+    return;
+  }
+  
+  const assignment = {
+    id: 'CLASS-' + Date.now(),
+    studentId: studentId,
+    studentName: student.username,
+    grade: grade,
+    assignedClass: `Grade ${grade} - ${section}`,
+    teacher: teacher,
+    room: room,
+    status: 'Active',
+    assignedAt: new Date().toISOString()
+  };
+  
+  studentClassAssignments.push(assignment);
+  lsSet('mssms_student_class_assignments', studentClassAssignments);
+  
+  // Update student user if exists to add class info
+  const user = users.find(u => u.username === student.username);
+  if (user) {
+    user.class = `Grade ${grade} - ${section}`;
+    user.teacher = teacher;
+    lsSet('mssms_users', users);
+  }
+  
+  toast('Class assigned successfully', 'success');
+  btn.closest('.modal-overlay').remove();
+  loadRegistrarClasses();
+}
+
+function deleteClassAssignment(assignmentId) {
+  if (confirm('Remove this class assignment?')) {
+    studentClassAssignments = studentClassAssignments.filter(a => a.id !== assignmentId);
+    lsSet('mssms_student_class_assignments', studentClassAssignments);
+    loadRegistrarClasses();
+    toast('Assignment removed', 'success');
+  }
 }
 
 // ╔════════════════════════════════════════════════════════════════════╗
