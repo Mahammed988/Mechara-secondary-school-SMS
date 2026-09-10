@@ -1,0 +1,691 @@
+{
+  "description": "Student Registration System - Data Models and JSON Structure",
+  
+  "REGISTRATION_CONFIG": {
+    "gradeProgression": {
+      "validSequence": [8, 9, 10, 11, 12]
+    },
+    "fees": {
+      "grade9": { "amount": 1000, "currency": "ETB" },
+      "grade10": { "amount": 1000, "currency": "ETB" },
+      "grade11": { "amount": 1000, "currency": "ETB" },
+      "grade12": { "amount": 1000, "currency": "ETB" }
+    },
+    "paymentMethods": ["CBE", "Siinqe", "Awash", "CBO"]
+  },
+
+  "DOCUMENT_REQUIREMENTS": {
+    "grade9": {
+      "registrationType": "NEW_ENTRY",
+      "documents": [
+        {
+          "id": "grade8_certificate",
+          "name": "Grade 8 Certificate",
+          "type": "certificate",
+          "mandatory": true,
+          "format": ["PDF", "JPG", "PNG"],
+          "maxSizeMB": 5
+        },
+        {
+          "id": "profile_pic",
+          "name": "Profile Picture",
+          "type": "image",
+          "mandatory": true,
+          "format": ["JPG", "PNG"],
+          "maxSizeMB": 2
+        },
+        {
+          "id": "national_id",
+          "name": "National ID",
+          "type": "document",
+          "mandatory": true,
+          "format": ["PDF", "JPG", "PNG"],
+          "maxSizeMB": 5
+        },
+        {
+          "id": "guardian_pic",
+          "name": "Guardian Picture",
+          "type": "image",
+          "mandatory": true,
+          "format": ["JPG", "PNG"],
+          "maxSizeMB": 2
+        }
+      ]
+    },
+    "grade10": {
+      "newEntry": {
+        "registrationType": "NEW_ENTRY",
+        "documents": [
+          {
+            "id": "grade9_transcript",
+            "name": "Grade 9 Transcript",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "national_id",
+            "name": "National ID",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "withdrawal_reason",
+            "name": "Withdrawal Reason Document",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "profile_pic",
+            "name": "Profile Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          },
+          {
+            "id": "guardian_pic",
+            "name": "Guardian Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          }
+        ]
+      },
+      "senior": {
+        "registrationType": "SENIOR",
+        "description": "Continuing from Grade 9",
+        "logic": "IF (grade9_passed) THEN documents = [profile_pic, guardian_pic] ELSE documents = [profile_pic, guardian_pic, grade9_transcript]",
+        "baseDocuments": [
+          {
+            "id": "profile_pic",
+            "name": "Profile Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          },
+          {
+            "id": "guardian_pic",
+            "name": "Guardian Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          }
+        ],
+        "conditionalDocuments": [
+          {
+            "id": "grade9_transcript",
+            "name": "Grade 9 Transcript",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5,
+            "requiredIf": "grade9_passed == false"
+          }
+        ]
+      }
+    },
+    "grade11": {
+      "newEntry": {
+        "registrationType": "NEW_ENTRY",
+        "baseDocuments": [
+          {
+            "id": "grade10_transcript",
+            "name": "Grade 10 Transcript",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "national_id",
+            "name": "National ID",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "withdrawal_reason",
+            "name": "Withdrawal Reason Document",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "profile_pic",
+            "name": "Profile Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          },
+          {
+            "id": "guardian_pic",
+            "name": "Guardian Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          }
+        ]
+      },
+      "senior": {
+        "registrationType": "SENIOR",
+        "description": "Continuing from Grade 10",
+        "logic": "IF (grade10_passed) THEN documents = [profile_pic, guardian_pic] ELSE documents = [profile_pic, guardian_pic, grade10_transcript]"
+      }
+    },
+    "grade12": {
+      "newEntry": {
+        "registrationType": "NEW_ENTRY",
+        "baseDocuments": [
+          {
+            "id": "grade11_transcript",
+            "name": "Grade 11 Transcript",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "national_id",
+            "name": "National ID",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "withdrawal_reason",
+            "name": "Withdrawal Reason Document",
+            "type": "document",
+            "mandatory": true,
+            "format": ["PDF", "JPG", "PNG"],
+            "maxSizeMB": 5
+          },
+          {
+            "id": "profile_pic",
+            "name": "Profile Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          },
+          {
+            "id": "guardian_pic",
+            "name": "Guardian Picture",
+            "type": "image",
+            "mandatory": true,
+            "format": ["JPG", "PNG"],
+            "maxSizeMB": 2
+          }
+        ]
+      },
+      "senior": {
+        "registrationType": "SENIOR",
+        "description": "Continuing from Grade 11",
+        "logic": "IF (grade11_passed) THEN documents = [profile_pic, guardian_pic] ELSE documents = [profile_pic, guardian_pic, grade11_transcript]"
+      }
+    }
+  },
+
+  "REGISTRATION_STATES": {
+    "DRAFT": {
+      "description": "Form in progress, not submitted",
+      "allowedTransitions": ["SUBMITTED"],
+      "requiredFields": []
+    },
+    "SUBMITTED": {
+      "description": "Form submitted, awaiting document upload",
+      "allowedTransitions": ["DOCUMENT_UPLOAD_IN_PROGRESS", "PENDING_APPROVAL", "REJECTED"],
+      "requiredFields": ["personalInfo", "academicInfo", "guardianInfo"]
+    },
+    "DOCUMENT_UPLOAD_IN_PROGRESS": {
+      "description": "Student uploading required documents",
+      "allowedTransitions": ["PENDING_APPROVAL", "INCOMPLETE"],
+      "requiredFields": ["documents"]
+    },
+    "INCOMPLETE": {
+      "description": "Missing required documents",
+      "allowedTransitions": ["DOCUMENT_UPLOAD_IN_PROGRESS", "REJECTED"],
+      "requiredFields": ["documents"]
+    },
+    "PENDING_APPROVAL": {
+      "description": "Documents complete, awaiting admin/registrar approval",
+      "allowedTransitions": ["APPROVED", "REJECTED", "NEEDS_REVISION"],
+      "requiredFields": ["documents", "validation"]
+    },
+    "NEEDS_REVISION": {
+      "description": "Documents need revision before approval",
+      "allowedTransitions": ["DOCUMENT_UPLOAD_IN_PROGRESS", "REJECTED"],
+      "requiredFields": ["approvalNotes"]
+    },
+    "APPROVED": {
+      "description": "Documents approved, awaiting payment",
+      "allowedTransitions": ["PAYMENT_IN_PROGRESS", "PAYMENT_RECEIVED"],
+      "requiredFields": ["payment"]
+    },
+    "PAYMENT_IN_PROGRESS": {
+      "description": "Payment being processed",
+      "allowedTransitions": ["PAYMENT_RECEIVED", "PAYMENT_FAILED"],
+      "requiredFields": ["payment.transactionId"]
+    },
+    "PAYMENT_RECEIVED": {
+      "description": "Payment confirmed, ready for enrollment",
+      "allowedTransitions": ["ENROLLED"],
+      "requiredFields": ["payment.paidDate"]
+    },
+    "ENROLLED": {
+      "description": "Student successfully enrolled in the system",
+      "allowedTransitions": [],
+      "requiredFields": []
+    },
+    "REJECTED": {
+      "description": "Application rejected",
+      "allowedTransitions": ["RESUBMIT"],
+      "requiredFields": ["approvalNotes.reasonForRejection"]
+    },
+    "RESUBMIT": {
+      "description": "Resubmitting after rejection",
+      "allowedTransitions": ["PENDING_APPROVAL"],
+      "requiredFields": ["documents"]
+    }
+  },
+
+  "STUDENT_REGISTRATION_EXAMPLE": {
+    "id": "REG-1705312600000-ABC123",
+    "submissionTimestamp": "2024-01-15T10:30:00Z",
+    "status": "PENDING_APPROVAL",
+    "personalInfo": {
+      "firstName": "Abebe",
+      "middleName": "Hailu",
+      "lastName": "Kebede",
+      "dateOfBirth": "2007-05-20",
+      "gender": "M",
+      "nationalId": "12345678901",
+      "email": "abebe.kebede@school.com",
+      "phoneNumber": "+251911234567"
+    },
+    "academicInfo": {
+      "requestedGrade": 10,
+      "registrationType": "NEW_ENTRY",
+      "previousGrade": 9,
+      "previousSchool": "Previous School Name",
+      "yearCompletedPreviousGrade": 2023,
+      "previousGradeResults": {
+        "passed": true,
+        "gpa": 3.5,
+        "totalScore": 85
+      }
+    },
+    "guardianInfo": {
+      "firstName": "Hailu",
+      "lastName": "Kebede",
+      "relationship": "Father",
+      "phoneNumber": "+251922345678",
+      "email": "hailu.kebede@email.com",
+      "address": "Addis Ababa, Bole District",
+      "occupation": "Business Owner"
+    },
+    "documents": {
+      "uploaded": [
+        {
+          "id": "doc-001",
+          "documentType": "profile_pic",
+          "originalFileName": "profile_photo.jpg",
+          "fileSize": 1524800,
+          "uploadedTimestamp": "2024-01-15T10:25:00Z",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "doc-002",
+          "documentType": "guardian_pic",
+          "originalFileName": "guardian_photo.png",
+          "fileSize": 1024000,
+          "uploadedTimestamp": "2024-01-15T10:26:00Z",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "doc-003",
+          "documentType": "national_id",
+          "originalFileName": "national_id_scan.pdf",
+          "fileSize": 3048000,
+          "uploadedTimestamp": "2024-01-15T10:27:00Z",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "doc-004",
+          "documentType": "grade9_transcript",
+          "originalFileName": "grade_9_transcript.pdf",
+          "fileSize": 2048000,
+          "uploadedTimestamp": "2024-01-15T10:28:00Z",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "doc-005",
+          "documentType": "withdrawal_reason",
+          "originalFileName": "withdrawal_letter.pdf",
+          "fileSize": 512000,
+          "uploadedTimestamp": "2024-01-15T10:29:00Z",
+          "status": "VERIFIED"
+        }
+      ],
+      "pending": [],
+      "missing": [],
+      "uploadProgress": 100
+    },
+    "payment": {
+      "registrationFee": {
+        "amount": 1000,
+        "currency": "ETB",
+        "status": "PENDING",
+        "dueDate": "2024-01-20",
+        "paymentMethod": null,
+        "transactionId": null,
+        "paidDate": null,
+        "paidAmount": 0,
+        "balance": 1000
+      },
+      "paymentHistory": []
+    },
+    "registrarAssignment": {
+      "assignedRegistrar": "reg-001",
+      "registrarName": "Almaz Mengesha",
+      "assignmentDate": "2024-01-15T11:00:00Z",
+      "appointmentScheduled": false,
+      "appointmentStatus": "NOT_SCHEDULED"
+    },
+    "validation": {
+      "documentValidation": {
+        "status": "PASSED",
+        "allRequiredDocuments": true
+      },
+      "academicValidation": {
+        "status": "PASSED"
+      },
+      "paymentValidation": {
+        "status": "PENDING"
+      }
+    },
+    "timeline": {
+      "submittedAt": "2024-01-15T10:30:00Z",
+      "documentsCompletedAt": "2024-01-15T10:29:00Z",
+      "registrarAssignedAt": "2024-01-15T11:00:00Z",
+      "approvedAt": null,
+      "paymentReceivedAt": null,
+      "enrolledAt": null
+    }
+  },
+
+  "REGISTRAR_SCHEDULE_EXAMPLE": {
+    "registrarId": "reg-001",
+    "registrarName": "Almaz Mengesha",
+    "schedule": {
+      "monday": {
+        "available": true,
+        "slots": [
+          {
+            "slotId": "slot-mon-001",
+            "startTime": "09:00",
+            "endTime": "09:30",
+            "duration": 30,
+            "capacity": 1,
+            "booked": 0,
+            "available": true
+          },
+          {
+            "slotId": "slot-mon-002",
+            "startTime": "09:30",
+            "endTime": "10:00",
+            "duration": 30,
+            "capacity": 1,
+            "booked": 1,
+            "available": false
+          },
+          {
+            "slotId": "slot-mon-003",
+            "startTime": "10:00",
+            "endTime": "10:30",
+            "duration": 30,
+            "capacity": 1,
+            "booked": 0,
+            "available": true
+          },
+          {
+            "slotId": "slot-mon-004",
+            "startTime": "14:00",
+            "endTime": "14:30",
+            "duration": 30,
+            "capacity": 1,
+            "booked": 0,
+            "available": true
+          }
+        ]
+      },
+      "tuesday": {
+        "available": true,
+        "slots": []
+      },
+      "wednesday": {
+        "available": true,
+        "slots": []
+      },
+      "thursday": {
+        "available": true,
+        "slots": []
+      },
+      "friday": {
+        "available": true,
+        "slots": []
+      },
+      "saturday": {
+        "available": false,
+        "slots": []
+      },
+      "sunday": {
+        "available": false,
+        "slots": []
+      }
+    },
+    "holidays": [
+      {
+        "date": "2024-01-25",
+        "reason": "National Holiday",
+        "allDayOff": true
+      }
+    ],
+    "weeklyCapacity": 40,
+    "weeklyBooked": 8,
+    "weeklyAvailable": 32
+  },
+
+  "PAYMENT_TRANSACTION_EXAMPLE": {
+    "transactionId": "TRX-1705347075000-XYZ789",
+    "registrationId": "REG-1705312600000-ABC123",
+    "studentId": "STU-1705312600000",
+    "amount": 1000,
+    "currency": "ETB",
+    "paymentMethod": "CBE",
+    "paymentProvider": "Telebirr",
+    "status": "COMPLETED",
+    "transactionDetails": {
+      "initiatedAt": "2024-01-20T14:30:00Z",
+      "processedAt": "2024-01-20T14:31:15Z",
+      "completedAt": "2024-01-20T14:31:15Z",
+      "referenceNumber": "CBE-TRX-1234567890",
+      "confirmationCode": "CONF-ABC123DEF456"
+    },
+    "receiptDetails": {
+      "receiptNumber": "RCP-2024-001234",
+      "paidBy": "Hailu Kebede",
+      "paidOn": "2024-01-20",
+      "receiptUrl": "/receipts/RCP-2024-001234.pdf",
+      "downloadable": true
+    }
+  },
+
+  "PAYMENT_METHODS_SUPPORTED": [
+    {
+      "id": "payment-cbe",
+      "name": "CBE (Commercial Bank of Ethiopia)",
+      "provider": "Telebirr",
+      "accountNumber": "1000123456789",
+      "accountName": "Mechara Secondary School",
+      "processingTime": "Instant",
+      "supportedVia": ["Mobile", "Bank Branch", "ATM"]
+    },
+    {
+      "id": "payment-siinqe",
+      "name": "Siinqe",
+      "provider": "Siinqe",
+      "accountNumber": "mechara-school",
+      "accountName": "Mechara Secondary School",
+      "processingTime": "Instant",
+      "supportedVia": ["Mobile App", "Web"]
+    },
+    {
+      "id": "payment-awash",
+      "name": "Awash Bank",
+      "provider": "AwashBank Mobile",
+      "accountNumber": "1000098765432",
+      "accountName": "Mechara Secondary School",
+      "processingTime": "1-2 hours",
+      "supportedVia": ["Mobile", "Bank Branch"]
+    },
+    {
+      "id": "payment-cbo",
+      "name": "CBO (Community-Based Organization)",
+      "provider": "Local CBO",
+      "location": "CBO Office, Addis Ababa",
+      "processingTime": "24 hours",
+      "supportedVia": ["In-Person", "Phone Transfer"]
+    }
+  ],
+
+  "VALIDATION_RULES": {
+    "gradeProgression": [
+      {
+        "rule": "VALID_SEQUENCE",
+        "description": "Student's requested grade must follow valid progression",
+        "logic": "requestedGrade IN [8, 9, 10, 11, 12]",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "NEW_ENTRY_GRADE_9",
+        "description": "Grade 9 can only be NEW_ENTRY type",
+        "logic": "IF grade == 9 THEN registrationType == NEW_ENTRY",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "SENIOR_GRADE_PROGRESSION",
+        "description": "Senior students must have completed previous grade",
+        "logic": "IF registrationType == SENIOR THEN previousGrade == (requestedGrade - 1)",
+        "severity": "ERROR",
+        "blocking": true
+      }
+    ],
+    "documents": [
+      {
+        "rule": "MANDATORY_DOCUMENT",
+        "description": "All mandatory documents must be uploaded",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "FILE_SIZE_LIMIT",
+        "description": "Each document must not exceed size limit",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "FILE_FORMAT",
+        "description": "Document format must be in allowed list",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "NO_CORRUPTED_FILES",
+        "description": "Files must not be corrupted",
+        "severity": "ERROR",
+        "blocking": true
+      }
+    ],
+    "payment": [
+      {
+        "rule": "FEE_AMOUNT",
+        "description": "Fee must match configured amount for grade",
+        "severity": "ERROR",
+        "blocking": true
+      },
+      {
+        "rule": "PAYMENT_METHOD_VALID",
+        "description": "Payment method must be in allowed list",
+        "logic": "paymentMethod IN ['CBE', 'Siinqe', 'Awash', 'CBO']",
+        "severity": "ERROR",
+        "blocking": true
+      }
+    ]
+  },
+
+  "MOBILE_RESPONSIVE_BREAKPOINTS": {
+    "mobile": {
+      "maxWidth": 576,
+      "layout": "single-column",
+      "formLayout": "stacked",
+      "imageUpload": ["camera", "gallery", "file-browser"],
+      "paymentMethods": ["mobile-wallet", "qr-code", "payment-link"]
+    },
+    "tablet": {
+      "maxWidth": 768,
+      "layout": "two-column",
+      "formLayout": "two-column-fields",
+      "imageUpload": ["camera", "gallery", "file-browser", "drag-drop"],
+      "paymentMethods": ["mobile-wallet", "qr-code", "payment-link"]
+    },
+    "desktop": {
+      "maxWidth": "unlimited",
+      "layout": "multi-column",
+      "formLayout": "flexible",
+      "imageUpload": ["camera", "gallery", "file-browser", "drag-drop"],
+      "paymentMethods": ["mobile-wallet", "qr-code", "payment-link", "bank-transfer"]
+    }
+  },
+
+  "LOCALSTORAGE_SCHEMA": {
+    "mssms_registrations": {
+      "type": "Array<studentRegistration>",
+      "indexes": ["id", "status", "requestedGrade", "submissionTimestamp"],
+      "description": "All student registrations"
+    },
+    "mssms_reg_config": {
+      "type": "registrationConfig",
+      "description": "Registration system configuration"
+    },
+    "mssms_doc_requirements": {
+      "type": "documentRequirements",
+      "description": "Document requirements per grade and registration type"
+    },
+    "mssms_registrar_schedules": {
+      "type": "Array<registrarSchedule>",
+      "indexes": ["registrarId", "registrarName"],
+      "description": "All registrar availability schedules"
+    },
+    "mssms_payment_transactions": {
+      "type": "Array<paymentTransaction>",
+      "indexes": ["transactionId", "registrationId", "status"],
+      "description": "All payment transactions"
+    }
+  }
+}
