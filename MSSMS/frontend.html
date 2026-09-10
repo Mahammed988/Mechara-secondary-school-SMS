@@ -489,33 +489,84 @@
 
 <!-- LOGIN PAGE -->
 <div id="loginPage" class="auth-screen">
-  <div class="auth-card">
-    <div class="auth-title">Sign In</div>
-    <div class="auth-sub">Choose your role and sign in with demo credentials</div>
+  <div style="position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #0f2540 0%, #1a3c5e 40%, #2563eb 100%); z-index: -1;"></div>
+  
+  <!-- Logo/Header -->
+  <div style="position: absolute; top: 40px; left: 40px; color: #fff; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
+    <div style="width: 44px; height: 44px; background: #f59e0b; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🎓</div>
+    <span>Mechara SMS</span>
+  </div>
 
-    <div class="demo-grid">
-      <button class="demo-btn" onclick="fillLogin('admin','admin123')"><div class="demo-role">👮 Admin</div><div class="demo-cred">admin / admin123</div></button>
-      <button class="demo-btn" onclick="fillLogin('teacher','teacher123')"><div class="demo-role">👩‍🏫 Teacher</div><div class="demo-cred">teacher / teacher123</div></button>
-      <button class="demo-btn" onclick="fillLogin('registrar','reg123')"><div class="demo-role">📋 Registrar</div><div class="demo-cred">registrar / reg123</div></button>
-      <button class="demo-btn" onclick="fillLogin('finance','fin123')"><div class="demo-role">💰 Finance</div><div class="demo-cred">finance / fin123</div></button>
+  <div class="auth-card" style="max-width: 460px; position: relative; z-index: 1;">
+    <!-- Main Login Form -->
+    <div id="loginFormContainer">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">Welcome Back</div>
+        <div style="font-size: 13px; color: var(--gray);">Sign in to access your dashboard</div>
+      </div>
+
+      <form onsubmit="handleLogin(event)" novalidate>
+        <div class="form-group">
+          <label>Username or Email</label>
+          <input type="text" class="form-control" id="loginUser" placeholder="Enter your username or email"/>
+          <div class="form-error" id="userErr">Username or email is required</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Password</label>
+          <div style="position: relative;">
+            <input type="password" class="form-control" id="loginPass" placeholder="Enter your password"/>
+            <button type="button" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray); font-size: 16px;" onclick="togglePasswordVisibility()"><i class="fas fa-eye" id="eyeIcon"></i></button>
+          </div>
+          <div class="form-error" id="passErr">Password is required</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn" style="margin-bottom: 12px;"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      </form>
+
+      <!-- Links -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 12px;">
+        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; text-decoration: underline;" onclick="switchPage('forgotPassword')"><i class="fas fa-key"></i> Forgot Password?</button>
+        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; text-decoration: underline;" onclick="switchPage('studentRegister')"><i class="fas fa-user-plus"></i> Register</button>
+      </div>
+
+      <!-- Demo Info Box -->
+      <div style="margin-top: 24px; padding: 16px; background: #eff6ff; border-radius: 10px; border-left: 4px solid var(--secondary);">
+        <div style="font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 8px;">Demo Credentials</div>
+        <div style="font-size: 12px; color: var(--dark); line-height: 1.6;">
+          <div>👮 Admin: <strong>admin</strong> / <strong>admin123</strong></div>
+          <div>👩‍🏫 Teacher: <strong>teacher</strong> / <strong>teacher123</strong></div>
+          <div>📋 Registrar: <strong>registrar</strong> / <strong>reg123</strong></div>
+          <div>💰 Finance: <strong>finance</strong> / <strong>fin123</strong></div>
+          <div>👨‍🎓 Student: <strong>student</strong> / <strong>student123</strong></div>
+        </div>
+      </div>
     </div>
 
-    <form onsubmit="handleLogin(event)" novalidate>
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" class="form-control" id="loginUser" placeholder="username"/>
-        <div class="form-error" id="userErr">Username is required</div>
+    <!-- Forgot Password Form -->
+    <div id="forgotPasswordContainer" style="display: none;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <button type="button" class="btn" style="background: none; border: none; color: var(--gray); padding: 0; margin: 0;" onclick="switchPage('login')">← Back to Sign In</button>
+        <div style="font-size: 28px; font-weight: 800; color: var(--primary); margin-top: 12px;">Reset Password</div>
+        <div style="font-size: 13px; color: var(--gray); margin-top: 8px;">Enter your email to reset your password</div>
       </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" class="form-control" id="loginPass" placeholder="password"/>
-        <div class="form-error" id="passErr">Password is required</div>
-      </div>
-      <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
-    </form>
 
-    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--gray);">
-      <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-size: 12px; text-decoration: underline;" onclick="switchPage('studentRegister')">Student Self-Registration</button>
+      <form onsubmit="handleForgotPassword(event)" novalidate>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your registered email"/>
+          <div class="form-error" id="forgotEmailErr">Valid email is required</div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="resetBtn"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
+      </form>
+
+      <div id="resetSuccessMessage" style="display: none; margin-top: 16px; padding: 16px; background: #d1fae5; border-radius: 10px; border-left: 4px solid var(--success);">
+        <div style="font-weight: 700; color: #065f46; margin-bottom: 8px;">✅ Reset Link Sent</div>
+        <div style="font-size: 13px; color: #065f46; margin-bottom: 12px;">
+          We've sent a password reset link to your email. Please check your email and click the link to reset your password.
+        </div>
+        <button type="button" class="btn btn-primary" style="width: 100%; padding: 10px;" onclick="switchPage('login')">Back to Sign In</button>
+      </div>
     </div>
   </div>
 </div>
@@ -523,7 +574,10 @@
 <!-- STUDENT REGISTRATION PAGE -->
 <div id="studentRegisterPage" class="auth-screen" style="display: none;">
   <div class="auth-card">
-    <div class="auth-title">Register as Student</div>
+    <div style="text-align: center; margin-bottom: 8px;">
+      <button type="button" class="btn" style="background: none; border: none; color: var(--gray); padding: 0; margin-bottom: 12px;" onclick="switchPage('login')">← Back to Sign In</button>
+      <div class="auth-title">Register as Student</div>
+    </div>
     <div class="auth-sub">Create your account and wait for admin approval</div>
 
     <form onsubmit="handleStudentRegister(event)" novalidate>
@@ -1465,11 +1519,6 @@ function navigateTo(pageId) {
 // ║                       AUTHENTICATION                               ║
 // ╚════════════════════════════════════════════════════════════════════╝
 
-function fillLogin(user, pass) {
-  document.getElementById('loginUser').value = user;
-  document.getElementById('loginPass').value = pass;
-}
-
 function handleLogin(e) {
   e.preventDefault();
   const user = document.getElementById('loginUser').value.trim();
@@ -1478,7 +1527,7 @@ function handleLogin(e) {
   if (!user) { showErr('userErr'); return; }
   if (!pass) { showErr('passErr'); return; }
 
-  const found = users.find(u => u.username === user && u.password === pass);
+  const found = users.find(u => (u.username === user || u.email === user) && u.password === pass);
   if (!found) {
     toast('Invalid credentials', 'error');
     return;
@@ -1488,6 +1537,83 @@ function handleLogin(e) {
   ssSet('user', currentUser);
   renderApp();
   toast(`Welcome, ${currentUser.name}!`, 'success');
+}
+
+function togglePasswordVisibility() {
+  const passInput = document.getElementById('loginPass');
+  const eyeIcon = document.getElementById('eyeIcon');
+  
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    eyeIcon.classList.remove('fa-eye');
+    eyeIcon.classList.add('fa-eye-slash');
+  } else {
+    passInput.type = 'password';
+    eyeIcon.classList.remove('fa-eye-slash');
+    eyeIcon.classList.add('fa-eye');
+  }
+}
+
+function handleForgotPassword(e) {
+  e.preventDefault();
+  const email = document.getElementById('forgotEmail').value.trim();
+  
+  if (!email || !email.includes('@')) {
+    showErr('forgotEmailErr');
+    return;
+  }
+  
+  // Find user with this email
+  const user = users.find(u => u.email === email);
+  if (!user) {
+    toast('Email not found in system', 'error');
+    return;
+  }
+  
+  // Show success message
+  document.getElementById('resetSuccessMessage').style.display = 'block';
+  
+  // Store reset token in localStorage (for demo purposes)
+  const resetToken = {
+    email: email,
+    token: Math.random().toString(36).substr(2, 9).toUpperCase(),
+    username: user.username,
+    tempPassword: 'TempPass' + Date.now().toString().slice(-4),
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+  };
+  
+  const resetTokens = lsGet('mssms_reset_tokens', []);
+  resetTokens.push(resetToken);
+  lsSet('mssms_reset_tokens', resetTokens);
+  
+  console.log('Reset Token for Demo:', resetToken);
+  console.log('To reset password, use username:', user.username, 'and temporary password:', resetToken.tempPassword);
+  
+  // Hide form
+  document.getElementById('forgotPasswordContainer').style.display = 'block';
+  
+  // Auto-show success for 5 seconds then redirect
+  setTimeout(() => {
+    if (document.getElementById('resetSuccessMessage').style.display !== 'none') {
+      switchPage('login');
+    }
+  }, 5000);
+}
+
+function switchPage(page) {
+  document.getElementById('loginFormContainer').style.display = page === 'login' ? 'block' : 'none';
+  document.getElementById('forgotPasswordContainer').style.display = page === 'forgotPassword' ? 'block' : 'none';
+  
+  // Reset forms
+  if (page === 'login') {
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('resetSuccessMessage').style.display = 'none';
+  } else if (page === 'forgotPassword') {
+    document.getElementById('forgotEmail').value = '';
+    document.getElementById('resetSuccessMessage').style.display = 'none';
+  }
 }
 
 function handleStudentRegister(e) {
