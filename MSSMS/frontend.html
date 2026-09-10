@@ -1720,22 +1720,6 @@ function handleForgotPassword(e) {
   }, 5000);
 }
 
-function switchPage(page) {
-  document.getElementById('loginFormContainer').style.display = page === 'login' ? 'block' : 'none';
-  document.getElementById('forgotPasswordContainer').style.display = page === 'forgotPassword' ? 'block' : 'none';
-  document.getElementById('studentRegisterContainer').style.display = page === 'studentRegister' ? 'block' : 'none';
-  
-  // Reset forms
-  if (page === 'login') {
-    document.getElementById('loginUser').value = '';
-    document.getElementById('loginPass').value = '';
-    document.getElementById('resetSuccessMessage').style.display = 'none';
-  } else if (page === 'forgotPassword') {
-    document.getElementById('forgotEmail').value = '';
-    document.getElementById('resetSuccessMessage').style.display = 'none';
-  }
-}
-
 function handleStudentRegister(e) {
   e.preventDefault();
   const name = document.getElementById('regName').value.trim();
