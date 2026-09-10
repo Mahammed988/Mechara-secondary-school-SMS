@@ -1030,6 +1030,71 @@
         <div id="assignmentsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
       </div>
     </div>
+
+    <!-- STUDENT: REGISTRATION PAGE -->
+    <div class="page" id="page-student-register">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-clipboard-list"></i> Class Registration</div>
+            <div class="card-subtitle">Register for the upcoming academic year</div>
+          </div>
+        </div>
+        
+        <!-- Registration Status -->
+        <div id="registrationStatusContainer" style="margin-bottom: 20px;"></div>
+        
+        <!-- Registration Form -->
+        <div id="registrationFormContainer">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 20px;">
+            <div class="form-group">
+              <label>Requested Grade *</label>
+              <select class="form-control" id="regGrade" onchange="updateDocumentRequirements()">
+                <option value="">-- Select Grade --</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+              </select>
+            </div>
+            <div class="form-group" id="registrationTypeContainer" style="display: none;">
+              <label>Registration Type *</label>
+              <select class="form-control" id="regType" onchange="updateDocumentRequirements()">
+                <option value="">-- Select Type --</option>
+                <option value="NEW_ENTRY">New Entry (First Time)</option>
+                <option value="SENIOR">Senior (Continuing)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Document Requirements -->
+          <div class="card" style="background: var(--light); margin-bottom: 20px;">
+            <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">📋 Required Documents</div>
+            <div id="documentRequirementsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;"></div>
+          </div>
+
+          <!-- Document Upload Section -->
+          <div id="documentUploadContainer" style="display: none;">
+            <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">📁 Upload Documents</div>
+            <div id="documentsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 20px;"></div>
+          </div>
+
+          <!-- Registration Fee Section -->
+          <div class="card" id="feeContainer" style="background: #fff3cd; border: 2px solid #ffc107; display: none; margin-bottom: 20px;">
+            <div style="font-weight: 700; color: #856404; margin-bottom: 12px;"><i class="fas fa-money-bill"></i> Registration Fee: <span id="feeAmount">1000 ETB</span></div>
+            <div style="font-size: 13px; color: #856404; margin-bottom: 12px;">Fee must be paid before final enrollment approval.</div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-primary" style="width: auto; background: #ffc107; color: #000; border: none;" onclick="showPaymentOptions()"><i class="fas fa-credit-card"></i> Pay Now</button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" onclick="submitRegistration()" style="flex: 1;"><i class="fas fa-check"></i> Submit Registration</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1198,7 +1263,7 @@ const ROLES = {
   teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'teacher-profile', 'teacher-materials', 'teacher-assignments', 'teacher-announcements', 'teacher-submit-grades', 'teacher-schedule', 'teacher-communication', 'settings'] },
   registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
   finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
-  student: { name: 'Student', pages: ['dashboard', 'student-profile', 'student-grades', 'student-schedule', 'student-class', 'student-announcements', 'student-materials', 'student-assignments', 'settings'] },
+  student: { name: 'Student', pages: ['dashboard', 'student-profile', 'student-grades', 'student-schedule', 'student-class', 'student-announcements', 'student-materials', 'student-assignments', 'student-register', 'settings'] },
 };
 
 // ╔════════════════════════════════════════════════════════════════════╗
@@ -1319,6 +1384,7 @@ function buildNav() {
     { id: 'student-announcements', icon: 'fa-bullhorn', label: 'Announcements', role: ['student'] },
     { id: 'student-materials', icon: 'fa-book', label: 'Course Materials', role: ['student'] },
     { id: 'student-assignments', icon: 'fa-tasks', label: 'Assignments', role: ['student'] },
+    { id: 'student-register', icon: 'fa-clipboard-list', label: 'Register', role: ['student'] },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', role: ['admin', 'teacher', 'registrar', 'finance', 'student'] },
   ];
 
@@ -1369,6 +1435,7 @@ function navigateTo(pageId) {
   if (pageId === 'student-announcements') loadStudentAnnouncements();
   if (pageId === 'student-materials') loadStudentMaterials();
   if (pageId === 'student-assignments') loadStudentAssignments();
+  if (pageId === 'student-register') loadStudentRegistration();
   if (pageId === 'dashboard') showDashboard();
 }
 
@@ -2256,6 +2323,212 @@ function sendMessage() {
   messageInput.value = '';
   selectStudentForMessage(selectedStudentForMessage.id, selectedStudentForMessage.name);
   toast('Message sent', 'success');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║              STUDENT REGISTRATION FUNCTIONS                        ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+let studentRegistrations = lsGet('mssms_student_registrations', []);
+
+function loadStudentRegistration() {
+  const registrationFormContainer = document.getElementById('registrationFormContainer');
+  const registrationStatusContainer = document.getElementById('registrationStatusContainer');
+  
+  // Check if student already has a registration
+  const existingReg = studentRegistrations.find(r => r.username === currentUser.username);
+  
+  if (existingReg) {
+    // Show registration status
+    registrationFormContainer.style.display = 'none';
+    registrationStatusContainer.innerHTML = `
+      <div class="card" style="background: #d1fae5; border: 2px solid #10b981;">
+        <div style="font-weight: 700; color: #065f46; margin-bottom: 12px;">✅ Registration Status</div>
+        <div style="color: #065f46; margin-bottom: 8px;">
+          <div style="margin-bottom: 6px;"><strong>Status:</strong> ${existingReg.status}</div>
+          <div style="margin-bottom: 6px;"><strong>Requested Grade:</strong> Grade ${existingReg.grade}</div>
+          <div style="margin-bottom: 6px;"><strong>Submitted:</strong> ${new Date(existingReg.submittedAt).toLocaleDateString()}</div>
+          ${existingReg.status === 'APPROVED' ? `<div style="margin-bottom: 6px;"><strong>Payment Due:</strong> 1000 ETB</div>` : ''}
+          ${existingReg.status === 'PAYMENT_RECEIVED' ? `<div style="margin-bottom: 6px;"><strong>✅ Enrolled:</strong> You are officially registered!</div>` : ''}
+        </div>
+      </div>
+    `;
+  } else {
+    registrationStatusContainer.innerHTML = '';
+    registrationFormContainer.style.display = 'block';
+  }
+}
+
+function updateDocumentRequirements() {
+  const grade = document.getElementById('regGrade').value;
+  const regType = document.getElementById('regType').value;
+  const typeContainer = document.getElementById('registrationTypeContainer');
+  const requirementsContainer = document.getElementById('documentRequirementsContainer');
+  const uploadContainer = document.getElementById('documentUploadContainer');
+  const feeContainer = document.getElementById('feeContainer');
+  
+  if (!grade) {
+    typeContainer.style.display = 'none';
+    requirementsContainer.innerHTML = '';
+    uploadContainer.style.display = 'none';
+    feeContainer.style.display = 'none';
+    return;
+  }
+  
+  // Show registration type if not grade 9
+  if (grade === '9') {
+    typeContainer.style.display = 'none';
+    showGrade9Requirements();
+  } else {
+    typeContainer.style.display = 'grid';
+    if (regType) {
+      if (regType === 'NEW_ENTRY') {
+        showNewEntryRequirements(grade);
+      } else if (regType === 'SENIOR') {
+        showSeniorRequirements(grade);
+      }
+    }
+  }
+}
+
+function showGrade9Requirements() {
+  const requirementsContainer = document.getElementById('documentRequirementsContainer');
+  const uploadContainer = document.getElementById('documentUploadContainer');
+  const feeContainer = document.getElementById('feeContainer');
+  
+  const requirements = [
+    { id: 'grade8_cert', name: 'Grade 8 Certificate', format: 'PDF/JPG/PNG' },
+    { id: 'profile_pic', name: 'Profile Picture', format: 'JPG/PNG' },
+    { id: 'national_id', name: 'National ID', format: 'PDF/JPG/PNG' },
+    { id: 'guardian_pic', name: 'Guardian Picture', format: 'JPG/PNG' }
+  ];
+  
+  requirementsContainer.innerHTML = requirements.map(r => `
+    <div style="padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb;">
+      <div style="font-weight: 600; color: var(--primary);">${r.name}</div>
+      <div style="font-size: 12px; color: var(--gray);">${r.format}</div>
+    </div>
+  `).join('');
+  
+  createDocumentUploadFields(requirements);
+  uploadContainer.style.display = 'block';
+  feeContainer.style.display = 'block';
+}
+
+function showNewEntryRequirements(grade) {
+  const requirementsContainer = document.getElementById('documentRequirementsContainer');
+  const uploadContainer = document.getElementById('documentUploadContainer');
+  const feeContainer = document.getElementById('feeContainer');
+  
+  const requirements = [
+    { id: `grade${grade-1}_transcript`, name: `Grade ${grade-1} Transcript`, format: 'PDF/JPG/PNG' },
+    { id: 'national_id', name: 'National ID', format: 'PDF/JPG/PNG' },
+    { id: 'withdrawal_reason', name: 'Withdrawal Reason Letter', format: 'PDF/JPG/PNG' },
+    { id: 'profile_pic', name: 'Profile Picture', format: 'JPG/PNG' },
+    { id: 'guardian_pic', name: 'Guardian Picture', format: 'JPG/PNG' }
+  ];
+  
+  requirementsContainer.innerHTML = requirements.map(r => `
+    <div style="padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb;">
+      <div style="font-weight: 600; color: var(--primary);">${r.name}</div>
+      <div style="font-size: 12px; color: var(--gray);">${r.format}</div>
+    </div>
+  `).join('');
+  
+  createDocumentUploadFields(requirements);
+  uploadContainer.style.display = 'block';
+  feeContainer.style.display = 'block';
+}
+
+function showSeniorRequirements(grade) {
+  const requirementsContainer = document.getElementById('documentRequirementsContainer');
+  const uploadContainer = document.getElementById('documentUploadContainer');
+  const feeContainer = document.getElementById('feeContainer');
+  
+  // For senior, check if previous grade passed (simplified - always show minimal docs)
+  const requirements = [
+    { id: 'profile_pic', name: 'Profile Picture', format: 'JPG/PNG' },
+    { id: 'guardian_pic', name: 'Guardian Picture', format: 'JPG/PNG' },
+    { id: `grade${grade-1}_transcript`, name: `Grade ${grade-1} Transcript (if needed)`, format: 'PDF/JPG/PNG', optional: true }
+  ];
+  
+  requirementsContainer.innerHTML = requirements.map(r => `
+    <div style="padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb;">
+      <div style="font-weight: 600; color: var(--primary);">${r.name} ${r.optional ? '(Optional)' : ''}</div>
+      <div style="font-size: 12px; color: var(--gray);">${r.format}</div>
+    </div>
+  `).join('');
+  
+  createDocumentUploadFields(requirements);
+  uploadContainer.style.display = 'block';
+  feeContainer.style.display = 'block';
+}
+
+function createDocumentUploadFields(requirements) {
+  const documentsGrid = document.getElementById('documentsGrid');
+  
+  documentsGrid.innerHTML = requirements.map(r => `
+    <div style="border: 2px dashed #2563eb; border-radius: 10px; padding: 16px; text-align: center; cursor: pointer;" onclick="document.getElementById('${r.id}').click()">
+      <div style="font-size: 32px; margin-bottom: 8px;">📁</div>
+      <div style="font-weight: 600; color: var(--primary); margin-bottom: 4px;">${r.name}</div>
+      <div style="font-size: 11px; color: var(--gray);">Click to upload</div>
+      <input type="file" id="${r.id}" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleDocumentUpload('${r.id}', '${r.name}')"/>
+    </div>
+  `).join('');
+}
+
+function handleDocumentUpload(docId, docName) {
+  const fileInput = document.getElementById(docId);
+  const file = fileInput.files[0];
+  
+  if (!file) return;
+  
+  if (file.size > 5242880) { // 5MB limit
+    toast(`${docName} is too large (max 5MB)`, 'error');
+    fileInput.value = '';
+    return;
+  }
+  
+  toast(`${docName} uploaded successfully`, 'success');
+}
+
+function submitRegistration() {
+  const grade = document.getElementById('regGrade').value;
+  const regType = grade === '9' ? 'NEW_ENTRY' : document.getElementById('regType').value;
+  
+  if (!grade || (grade !== '9' && !regType)) {
+    toast('Please select grade and registration type', 'error');
+    return;
+  }
+  
+  const registration = {
+    id: `REG-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+    username: currentUser.username,
+    grade: grade,
+    registrationType: regType,
+    status: 'SUBMITTED',
+    submittedAt: new Date().toISOString(),
+    documents: [],
+    payment: {
+      status: 'PENDING',
+      amount: 1000,
+      currency: 'ETB'
+    }
+  };
+  
+  studentRegistrations.push(registration);
+  lsSet('mssms_student_registrations', studentRegistrations);
+  
+  toast('Registration submitted! Admin will review your application.', 'success');
+  
+  // Reload to show status
+  setTimeout(() => {
+    loadStudentRegistration();
+  }, 1500);
+}
+
+function showPaymentOptions() {
+  alert('Payment Methods:\n\n1. CBE: 1000123456789\n2. Siinqe: 1234567890\n3. Awash: 0142354678956\n4. CBO: 1000004563746854\n\nPlease contact the school office to complete payment.');
 }
 
 // ╔════════════════════════════════════════════════════════════════════╗
