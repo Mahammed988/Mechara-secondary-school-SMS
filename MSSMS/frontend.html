@@ -501,8 +501,11 @@
     <!-- Main Login Form -->
     <div id="loginFormContainer">
       <div style="text-align: center; margin-bottom: 32px;">
-        <div style="font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">Welcome Back</div>
-        <div style="font-size: 13px; color: var(--gray);">Sign in to access your dashboard</div>
+        <div style="display: inline-block; width: 56px; height: 56px; background: linear-gradient(135deg, var(--secondary), var(--primary)); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+          <i class="fas fa-graduation-cap" style="font-size: 28px; color: #fff;"></i>
+        </div>
+        <div style="font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;">Mechara SMS</div>
+        <div style="font-size: 13px; color: var(--gray); font-weight: 500;">Secondary School Management System</div>
       </div>
 
       <form onsubmit="handleLogin(event)" novalidate>
@@ -526,20 +529,8 @@
 
       <!-- Links -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 12px;">
-        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; text-decoration: underline;" onclick="switchPage('forgotPassword')"><i class="fas fa-key"></i> Forgot Password?</button>
-        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; text-decoration: underline;" onclick="switchPage('studentRegister')"><i class="fas fa-user-plus"></i> Register</button>
-      </div>
-
-      <!-- Demo Info Box -->
-      <div style="margin-top: 24px; padding: 16px; background: #eff6ff; border-radius: 10px; border-left: 4px solid var(--secondary);">
-        <div style="font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 8px;">Demo Credentials</div>
-        <div style="font-size: 12px; color: var(--dark); line-height: 1.6;">
-          <div>👮 Admin: <strong>admin</strong> / <strong>admin123</strong></div>
-          <div>👩‍🏫 Teacher: <strong>teacher</strong> / <strong>teacher123</strong></div>
-          <div>📋 Registrar: <strong>registrar</strong> / <strong>reg123</strong></div>
-          <div>💰 Finance: <strong>finance</strong> / <strong>fin123</strong></div>
-          <div>👨‍🎓 Student: <strong>student</strong> / <strong>student123</strong></div>
-        </div>
+        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-weight: 600; cursor: pointer; transition: all .2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="switchPage('forgotPassword')"><i class="fas fa-key"></i> Forgot Password?</button>
+        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-weight: 600; cursor: pointer; transition: all .2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="showRegisterPage()"><i class="fas fa-user-plus"></i> Register</button>
       </div>
     </div>
 
@@ -574,43 +565,45 @@
 <!-- STUDENT REGISTRATION PAGE -->
 <div id="studentRegisterPage" class="auth-screen" style="display: none;">
   <div class="auth-card">
-    <div style="text-align: center; margin-bottom: 8px;">
-      <button type="button" class="btn" style="background: none; border: none; color: var(--gray); padding: 0; margin-bottom: 12px;" onclick="switchPage('login')">← Back to Sign In</button>
-      <div class="auth-title">Register as Student</div>
-    </div>
-    <div class="auth-sub">Create your account and wait for admin approval</div>
+    <div id="studentRegisterContainer">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <button type="button" class="btn" style="background: none; border: none; color: var(--gray); padding: 0; margin-bottom: 12px;" onclick="switchPage('login')">← Back to Sign In</button>
+        <div class="auth-title">Register as Student</div>
+        <div class="auth-sub">Create your account and wait for admin approval</div>
+      </div>
 
-    <form onsubmit="handleStudentRegister(event)" novalidate>
-      <div class="form-group">
-        <label>Full Name *</label>
-        <input type="text" class="form-control" id="regName" placeholder="Your full name"/>
-        <div class="form-error" id="nameErr">Name is required</div>
-      </div>
-      <div class="form-group">
-        <label>Email *</label>
-        <input type="email" class="form-control" id="regEmail" placeholder="your@email.com"/>
-        <div class="form-error" id="emailErr">Valid email is required</div>
-      </div>
-      <div class="form-group">
-        <label>Username *</label>
-        <input type="text" class="form-control" id="regUsername" placeholder="username"/>
-        <div class="form-error" id="regUserErr">Username required (and must be unique)</div>
-      </div>
-      <div class="form-group">
-        <label>Password *</label>
-        <input type="password" class="form-control" id="regPassword" placeholder="Min 6 characters"/>
-        <div class="form-error" id="passRegErr">Password must be at least 6 characters</div>
-      </div>
-      <div class="form-group">
-        <label>Guardian Phone *</label>
-        <input type="tel" class="form-control" id="regPhone" placeholder="+251 9XX XXX XXX"/>
-        <div class="form-error" id="phoneErr">Phone is required</div>
-      </div>
-      <button type="submit" class="btn btn-primary" id="regBtn">Request Registration</button>
-    </form>
+      <form onsubmit="handleStudentRegister(event)" novalidate>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" class="form-control" id="regName" placeholder="Your full name"/>
+          <div class="form-error" id="nameErr">Name is required</div>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" class="form-control" id="regEmail" placeholder="your@email.com"/>
+          <div class="form-error" id="emailErr">Valid email is required</div>
+        </div>
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" class="form-control" id="regUsername" placeholder="username"/>
+          <div class="form-error" id="regUserErr">Username required (and must be unique)</div>
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" class="form-control" id="regPassword" placeholder="Min 6 characters"/>
+          <div class="form-error" id="passRegErr">Password must be at least 6 characters</div>
+        </div>
+        <div class="form-group">
+          <label>Guardian Phone *</label>
+          <input type="tel" class="form-control" id="regPhone" placeholder="+251 9XX XXX XXX"/>
+          <div class="form-error" id="phoneErr">Phone is required</div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="regBtn">Request Registration</button>
+      </form>
 
-    <div style="text-align: center; margin-top: 20px;">
-      <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-size: 12px; text-decoration: underline;" onclick="switchPage('login')">Back to Sign In</button>
+      <div style="text-align: center; margin-top: 20px;">
+        <button type="button" class="btn" style="background: none; border: none; color: var(--secondary); padding: 0; font-size: 12px; font-weight: 600;" onclick="switchPage('login')">← Back to Sign In</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1162,6 +1155,23 @@
             </div>
           </div>
 
+          <!-- Payment Receipt Upload Section -->
+          <div class="card" id="paymentReceiptContainer" style="background: #e8f5e9; border: 2px solid #4caf50; display: none; margin-bottom: 20px;">
+            <div style="font-weight: 700; color: #2e7d32; margin-bottom: 12px;"><i class="fas fa-receipt"></i> Upload Payment Receipt</div>
+            <div style="font-size: 13px; color: #2e7d32; margin-bottom: 12px;">Upload your payment receipt as proof of payment (JPG, PNG, or PDF)</div>
+            <div class="form-group">
+              <label>Payment Receipt (JPG, PNG, PDF) *</label>
+              <div style="border: 2px dashed #4caf50; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; transition: all .3s;" id="receiptUploadArea" onclick="document.getElementById('paymentReceiptFile').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 28px; color: #4caf50; margin-bottom: 8px; display: block;"></i>
+                <div style="color: #2e7d32; font-weight: 600;">Click to upload payment receipt</div>
+                <div style="font-size: 12px; color: #4caf50; margin-top: 4px;">or drag and drop (Max 5MB)</div>
+              </div>
+              <input type="file" id="paymentReceiptFile" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="handleReceiptUpload(event)"/>
+              <div id="receiptFileName" style="margin-top: 8px; color: #2e7d32; font-size: 12px;"></div>
+              <div class="form-error" id="receiptErr">Payment receipt is required</div>
+            </div>
+          </div>
+
           <!-- Submit Button -->
           <div style="display: flex; gap: 10px;">
             <button class="btn btn-primary" onclick="submitRegistration()" style="flex: 1;"><i class="fas fa-check"></i> Submit Registration</button>
@@ -1604,6 +1614,7 @@ function handleForgotPassword(e) {
 function switchPage(page) {
   document.getElementById('loginFormContainer').style.display = page === 'login' ? 'block' : 'none';
   document.getElementById('forgotPasswordContainer').style.display = page === 'forgotPassword' ? 'block' : 'none';
+  document.getElementById('studentRegisterContainer').style.display = page === 'studentRegister' ? 'block' : 'none';
   
   // Reset forms
   if (page === 'login') {
@@ -1614,6 +1625,10 @@ function switchPage(page) {
     document.getElementById('forgotEmail').value = '';
     document.getElementById('resetSuccessMessage').style.display = 'none';
   }
+}
+
+function showRegisterPage() {
+  switchPage('studentRegister');
 }
 
 function handleStudentRegister(e) {
@@ -2561,6 +2576,7 @@ function showGrade9Requirements() {
   createDocumentUploadFields(requirements);
   uploadContainer.style.display = 'block';
   feeContainer.style.display = 'block';
+  document.getElementById('paymentReceiptContainer').style.display = 'block';
 }
 
 function showNewEntryRequirements(grade) {
@@ -2586,6 +2602,7 @@ function showNewEntryRequirements(grade) {
   createDocumentUploadFields(requirements);
   uploadContainer.style.display = 'block';
   feeContainer.style.display = 'block';
+  document.getElementById('paymentReceiptContainer').style.display = 'block';
 }
 
 function showSeniorRequirements(grade) {
@@ -2610,6 +2627,7 @@ function showSeniorRequirements(grade) {
   createDocumentUploadFields(requirements);
   uploadContainer.style.display = 'block';
   feeContainer.style.display = 'block';
+  document.getElementById('paymentReceiptContainer').style.display = 'block';
 }
 
 function createDocumentUploadFields(requirements) {
@@ -2648,6 +2666,14 @@ function submitRegistration() {
     toast('Please select grade and registration type', 'error');
     return;
   }
+
+  // Check if payment receipt is uploaded
+  const receiptFile = document.getElementById('paymentReceiptFile').files[0];
+  if (!receiptFile) {
+    showErr('receiptErr');
+    toast('Please upload payment receipt before submitting', 'error');
+    return;
+  }
   
   const registration = {
     id: `REG-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
@@ -2658,22 +2684,77 @@ function submitRegistration() {
     submittedAt: new Date().toISOString(),
     documents: [],
     payment: {
-      status: 'PENDING',
+      status: 'SUBMITTED',
       amount: 1000,
-      currency: 'ETB'
+      currency: 'ETB',
+      receiptFileName: receiptFile.name,
+      receiptSize: receiptFile.size,
+      receiptType: receiptFile.type,
+      receiptUploadedAt: new Date().toISOString()
     }
   };
   
   studentRegistrations.push(registration);
   lsSet('mssms_student_registrations', studentRegistrations);
   
-  toast('Registration submitted! Admin will review your application.', 'success');
+  toast('Registration submitted with payment receipt! Admin will review your application.', 'success');
   
   // Reload to show status
   setTimeout(() => {
     loadStudentRegistration();
   }, 1500);
 }
+
+function handleReceiptUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Validate file type
+  const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+  if (!validTypes.includes(file.type)) {
+    toast('Invalid file type. Please upload JPG, PNG, or PDF', 'error');
+    document.getElementById('paymentReceiptFile').value = '';
+    return;
+  }
+
+  // Validate file size (5MB max)
+  if (file.size > 5 * 1024 * 1024) {
+    toast('File too large. Maximum size is 5MB', 'error');
+    document.getElementById('paymentReceiptFile').value = '';
+    return;
+  }
+
+  // Show file name
+  document.getElementById('receiptFileName').innerHTML = `<i class="fas fa-check-circle" style="color: #4caf50; margin-right: 6px;"></i>Receipt uploaded: <strong>${file.name}</strong> (${(file.size / 1024).toFixed(2)} KB)`;
+  document.getElementById('receiptErr').style.display = 'none';
+  toast('Payment receipt uploaded successfully', 'success');
+}
+
+// Add drag and drop support for receipt upload
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadArea = document.getElementById('receiptUploadArea');
+  if (uploadArea) {
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.background = '#c8e6c9';
+      uploadArea.style.borderColor = '#2e7d32';
+    });
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.background = '';
+      uploadArea.style.borderColor = '#4caf50';
+    });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.background = '';
+      uploadArea.style.borderColor = '#4caf50';
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        document.getElementById('paymentReceiptFile').files = files;
+        handleReceiptUpload({ target: { files: files } });
+      }
+    });
+  }
+});
 
 function showPaymentOptions() {
   alert('Payment Methods:\n\n1. CBE: 1000123456789\n2. Siinqe: 1234567890\n3. Awash: 0142354678956\n4. CBO: 1000004563746854\n\nPlease contact the school office to complete payment.');
