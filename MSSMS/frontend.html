@@ -43,6 +43,7 @@
       overflow: hidden;
     }
     .auth-screen.hidden { display: none; }
+    .auth-screen.hide { display: none !important; }
     .auth-card {
       width: 100%;
       max-width: 440px;
@@ -932,6 +933,7 @@ window.addEventListener('load', function() {
 });
 
 function showPage(page) {
+  document.getElementById('splash').classList.add('hide');
   document.getElementById('loginPage').style.display = page === 'login' ? 'flex' : 'none';
   document.getElementById('studentRegisterPage').style.display = page === 'studentRegister' ? 'flex' : 'none';
   document.getElementById('main').style.display = page !== 'login' && page !== 'studentRegister' ? 'flex' : 'none';
@@ -942,7 +944,12 @@ function switchPage(page) {
 }
 
 function renderApp() {
-  showPage('app');
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('studentRegisterPage').style.display = 'none';
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('main').style.display = 'flex';
+  document.getElementById('sidebar').style.display = 'flex';
+  
   document.getElementById('sidebarName').textContent = currentUser.name;
   document.getElementById('sidebarRole').textContent = ROLES[currentUser.role].name;
   document.getElementById('sidebarAvatar').textContent = currentUser.name[0].toUpperCase();
