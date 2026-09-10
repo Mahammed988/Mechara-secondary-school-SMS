@@ -630,6 +630,26 @@
       </div>
     </div>
 
+    <!-- ADMIN: REGISTERED STUDENTS REVIEW PAGE -->
+    <div class="page" id="page-registered-students">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-file-check"></i> Student Registration Review</div>
+            <div class="card-subtitle">Review and approve submitted registrations with documents and payment info</div>
+          </div>
+          <select class="form-control" id="filterByGrade" style="width: auto; min-width: 160px;" onchange="loadRegisteredStudents()">
+            <option value="">All Grades</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+          </select>
+        </div>
+        <div id="registeredStudentsContainer" style="display: flex; flex-direction: column; gap: 16px;"></div>
+      </div>
+    </div>
+
     <!-- STUDENTS (Registrar - manage, Admin - view all) -->
     <div class="page" id="page-students">
       <div class="card">
@@ -1259,7 +1279,7 @@
  */
 
 const ROLES = {
-  admin: { name: 'Administrator', pages: ['dashboard', 'approvals', 'students', 'attendance', 'grades', 'fees', 'users', 'settings'] },
+  admin: { name: 'Administrator', pages: ['dashboard', 'approvals', 'registered-students', 'students', 'attendance', 'grades', 'fees', 'users', 'settings'] },
   teacher: { name: 'Teacher', pages: ['dashboard', 'mystudents', 'attendance', 'grades', 'teacher-profile', 'teacher-materials', 'teacher-assignments', 'teacher-announcements', 'teacher-submit-grades', 'teacher-schedule', 'teacher-communication', 'settings'] },
   registrar: { name: 'Registrar', pages: ['dashboard', 'students', 'settings'] },
   finance: { name: 'Finance', pages: ['dashboard', 'fees', 'settings'] },
@@ -1362,6 +1382,7 @@ function buildNav() {
   const items = [
     { id: 'dashboard', icon: 'fa-chart-line', label: 'Dashboard' },
     { id: 'approvals', icon: 'fa-check-circle', label: 'Student Approvals', role: ['admin'] },
+    { id: 'registered-students', icon: 'fa-file-check', label: 'Registered Students', role: ['admin'] },
     { id: 'students', icon: 'fa-users', label: 'Students', role: ['admin', 'registrar'] },
     { id: 'mystudents', icon: 'fa-graduation-cap', label: 'My Class', role: ['teacher'] },
     { id: 'attendance', icon: 'fa-clipboard-check', label: 'Attendance', role: ['admin', 'teacher'] },
@@ -1414,6 +1435,7 @@ function navigateTo(pageId) {
   }
 
   if (pageId === 'approvals') loadApprovals();
+  if (pageId === 'registered-students') loadRegisteredStudents();
   if (pageId === 'students') loadStudents();
   if (pageId === 'mystudents') loadMyStudents();
   if (pageId === 'attendance') loadAttendance();
@@ -2529,6 +2551,183 @@ function submitRegistration() {
 
 function showPaymentOptions() {
   alert('Payment Methods:\n\n1. CBE: 1000123456789\n2. Siinqe: 1234567890\n3. Awash: 0142354678956\n4. CBO: 1000004563746854\n\nPlease contact the school office to complete payment.');
+}
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║               ADMIN REGISTRATION REVIEW FUNCTIONS                  ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+function loadRegisteredStudents() {
+  const container = document.getElementById('registeredStudentsContainer');
+  const gradeFilter = document.getElementById('filterByGrade').value;
+  
+  let filtered = studentRegistrations;
+  if (gradeFilter) {
+    filtered = studentRegistrations.filter(r => r.grade === gradeFilter);
+  }
+  
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>No registered students</div>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map((reg, i) => {
+    const user = users.find(u => u.username === reg.username);
+    const gradeLabel = `Grade ${reg.grade}`;
+    const typeLabel = reg.registrationType === 'NEW_ENTRY' ? 'New Entry' : 'Senior (Continuing)';
+    
+    return `
+      <div style="background: #fff; border-radius: var(--radius); border: 2px solid #e5e7eb; overflow: hidden;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 700; font-size: 16px;">${user ? user.name : 'Unknown Student'}</div>
+            <div style="font-size: 12px; opacity: 0.9;">${gradeLabel} • ${typeLabel}</div>
+          </div>
+          <span class="badge-status ${reg.status.toLowerCase()}" style="text-transform: capitalize;">${reg.status}</span>
+        </div>
+        
+        <!-- Student Info -->
+        <div style="padding: 16px; background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+            <div>
+              <div style="font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase;">Username</div>
+              <div style="font-size: 13px; color: var(--dark); margin-top: 4px;">${reg.username}</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase;">Email</div>
+              <div style="font-size: 13px; color: var(--dark); margin-top: 4px;">${user ? user.email : '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase;">Phone</div>
+              <div style="font-size: 13px; color: var(--dark); margin-top: 4px;">${user ? user.phone : '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase;">Submitted</div>
+              <div style="font-size: 13px; color: var(--dark); margin-top: 4px;">${new Date(reg.submittedAt).toLocaleDateString()}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Document Status -->
+        <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
+          <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">📁 Documents</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+            <div style="padding: 10px; background: #d1fae5; border-radius: 8px; text-align: center;">
+              <div style="font-size: 12px; color: #065f46; font-weight: 600;">✅ ${reg.documents.length} uploaded</div>
+            </div>
+            <button class="btn btn-primary" style="width: auto; padding: 8px 12px; font-size: 12px;" onclick="viewDocuments('${reg.id}')"><i class="fas fa-eye"></i> View Documents</button>
+          </div>
+        </div>
+        
+        <!-- Payment Status -->
+        <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
+          <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">💰 Payment</div>
+          <div style="padding: 12px; background: ${reg.payment.status === 'RECEIVED' ? '#d1fae5' : '#fef3c7'}; border-radius: 8px; text-align: center;">
+            <div style="font-weight: 600; color: ${reg.payment.status === 'RECEIVED' ? '#065f46' : '#92400e'}; margin-bottom: 4px;">
+              ${reg.payment.status === 'RECEIVED' ? '✅ Payment Received' : '⏳ Payment Pending'}
+            </div>
+            <div style="font-size: 12px; color: ${reg.payment.status === 'RECEIVED' ? '#065f46' : '#92400e'};">${reg.payment.amount} ${reg.payment.currency}</div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div style="padding: 16px; display: flex; gap: 10px;">
+          ${reg.status === 'SUBMITTED' ? `
+            <button class="btn btn-primary" style="flex: 1;" onclick="approveRegistration('${reg.id}')"><i class="fas fa-check"></i> Approve</button>
+            <button class="btn btn-danger" style="flex: 1;" onclick="rejectRegistration('${reg.id}')"><i class="fas fa-times"></i> Reject</button>
+          ` : reg.status === 'APPROVED' && reg.payment.status === 'RECEIVED' ? `
+            <button class="btn btn-primary" style="flex: 1;" onclick="enrollStudent('${reg.id}')"><i class="fas fa-graduation-cap"></i> Finalize Enrollment</button>
+          ` : `
+            <div style="flex: 1; padding: 12px; background: #f3f4f6; border-radius: 10px; text-align: center; color: var(--gray);">
+              ${reg.status === 'APPROVED' ? 'Awaiting Payment' : 'Completed'}
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function viewDocuments(registrationId) {
+  const reg = studentRegistrations.find(r => r.id === registrationId);
+  if (!reg) return;
+  
+  const docList = reg.documents.length > 0 
+    ? reg.documents.map(d => `<li style="margin-bottom: 8px;">📄 ${d.name}</li>`).join('')
+    : '<li style="color: var(--gray);">No documents uploaded</li>';
+  
+  alert(`Documents for Registration ${registrationId}:\n\n${reg.documents.map(d => `• ${d.name}`).join('\n') || 'No documents'}\n\nTo view actual files, navigate to document storage.`);
+}
+
+function approveRegistration(registrationId) {
+  const reg = studentRegistrations.find(r => r.id === registrationId);
+  if (!reg) return;
+  
+  reg.status = 'APPROVED';
+  reg.approvedAt = new Date().toISOString();
+  
+  lsSet('mssms_student_registrations', studentRegistrations);
+  toast('Registration approved! Student awaiting payment.', 'success');
+  loadRegisteredStudents();
+}
+
+function rejectRegistration(registrationId) {
+  const reason = prompt('Reason for rejection:');
+  if (!reason) return;
+  
+  const reg = studentRegistrations.find(r => r.id === registrationId);
+  if (!reg) return;
+  
+  reg.status = 'REJECTED';
+  reg.rejectionReason = reason;
+  reg.rejectedAt = new Date().toISOString();
+  
+  lsSet('mssms_student_registrations', studentRegistrations);
+  toast('Registration rejected.', 'error');
+  loadRegisteredStudents();
+}
+
+function enrollStudent(registrationId) {
+  const reg = studentRegistrations.find(r => r.id === registrationId);
+  if (!reg) return;
+  
+  // Verify payment status
+  if (reg.payment.status !== 'RECEIVED') {
+    toast('Payment not verified. Cannot enroll student.', 'error');
+    return;
+  }
+  
+  const user = users.find(u => u.username === reg.username);
+  if (!user) return;
+  
+  // Create student record
+  const newStudent = {
+    id: `STU-${Date.now()}`,
+    name: user.name,
+    grade: `Grade ${reg.grade}`,
+    email: user.email,
+    guardianPhone: user.phone,
+    status: 'active',
+    registrationId: reg.id,
+    enrolledDate: new Date().toISOString()
+  };
+  
+  students.push(newStudent);
+  user.studentId = newStudent.id;
+  
+  const userIndex = users.findIndex(u => u.username === reg.username);
+  users[userIndex] = user;
+  
+  reg.status = 'ENROLLED';
+  reg.enrolledAt = new Date().toISOString();
+  
+  lsSet('mssms_students', students);
+  lsSet('mssms_users', users);
+  lsSet('mssms_student_registrations', studentRegistrations);
+  
+  toast(`${user.name} successfully enrolled in Grade ${reg.grade}!`, 'success');
+  loadRegisteredStudents();
 }
 
 // ╔════════════════════════════════════════════════════════════════════╗
